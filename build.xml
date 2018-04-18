@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<project name="jwinwin" default="dist" basedir=".">
+
+	<property file="build.properties"/>
+
+	<property name="src" location="src"/>
+	<property name="bin" location="bin"/>
+	<property name="lib" location="lib"/>
+	<property name="dist" location="dist"/>
+	<property name="pkgdist" location="${dist}/org.unclesniper.winwin.jar"/>
+	<property name="res" location="res"/>
+	<property name="binres" location="${bin}/org/unclesniper/winwin/resource"/>
+	<property name="doc" location="doc"/>
+	<property name="api.doc.visibility" value="private"/>
+	<property name="javadoc.jre.package.list" location="jre6.packages"/>
+	<property name="javadoc.jre.url" value="http://docs.oracle.com/javase/6/docs/api/"/>
+	<property name="gcc" value="x86_64-w64-mingw32-gcc"/>
+	<property name="jni.dir" value="jni"/>
+	<property name="jni.dll.name" value="jwinwin"/>
+	<property name="jni.system.headers" value="jwinwin"/>
+
+	<path id="build.classpath">
+		<fileset dir="${lib}" includes="**/*.jar"/>
+		<pathelement path="${bin}"/>
+	</path>
+
+	<target name="init">
+		<mkdir dir="${bin}"/>
+		<mkdir dir="${binres}"/>
+		<mkdir dir="${dist}/lib"/>
+		<mkdir dir="${doc}/api"/>
+	</target>
+
+	<target name="compile" depends="init" description="compile the source">
+		<javac srcdir="${src}" destdir="${bin}" debug="on" includeantruntime="no"
+				classpathref="build.classpath">
+			<compilerarg value="-Xlint:unchecked"/>
+			<compilerarg value="-Xlint:deprecation"/>
+		</javac>
+	</target>
+
+	<target name="dist" depends="compile,jni" description="generate the distribution">
+		<copy todir="${binres}">
+			<fileset dir="${res}">
+				<filename name="**/*"/>
+			</fileset>
+		</copy>
+		<jar jarfile="${pkgdist}" basedir="${bin}"/>
+		<copy todir="${dist}/lib">
+			<fileset dir="${lib}">
+				<filename name="**/*.jar"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="doc" depends="init" description="generate documentation">
+		<javadoc sourcepath="${src}" destdir="${doc}/api" classpathref="build.classpath"
+				Windowtitle="jwinwin API" access="${api.doc.visibility}">
+			<link href="${javadoc.jre.url}" packagelistLoc="${javadoc.jre.package.list}"/>
+		</javadoc>
+	</target>
+
+	<target name="clean" description="clean up">
+		<delete dir="${bin}"/>
+		<delete dir="${dist}"/>
+		<delete dir="${doc}/api"/>
+	</target>
+
+	<target name="headers" depends="compile" description="generate JNI headers">
+		<exec executable="javah">
+			<arg value="-cp"/>
+			<arg value="${bin}"/>
+			<arg value="-d"/>
+			<arg value="${jni.dir}"/>
+			<arg value="org.unclesniper.winwin.WinAPI"/>
+			<arg value="org.unclesniper.winwin.HWnd"/>
+			<arg value="org.unclesniper.winwin.WndClassEx"/>
+			<arg value="org.unclesniper.winwin.DefWindowProc"/>
+			<arg value="org.unclesniper.winwin.Msg"/>
+		</exec>
+	</target>
+
+	<target name="jni" depends="init" description="compile JNI library">
+		<exec executable="${gcc}">
+			<arg line="${jni.system.headers}"/>
+			<arg value="-shared"/>
+			<arg value="-Wl,-soname,${jni.dll.name}.dll"/>
+			<arg value="-o"/>
+			<arg value="${binres}/${jni.dll.name}.dll"/>
+			<arg value="-O2"/>
+			<arg value="${jni.dir}/org_unclesniper_winwin_WinAPI.c"/>
+			<arg value="${jni.dir}/org_unclesniper_winwin_HWnd.c"/>
+			<arg value="${jni.dir}/org_unclesniper_winwin_WndClassEx.c"/>
+			<arg value="${jni.dir}/org_unclesniper_winwin_DefWindowProc.c"/>
+			<arg value="${jni.dir}/org_unclesniper_winwin_Msg.c"/>
+		</exec>
+	</target>
+
+</project>
