@@ -17,6 +17,12 @@ public final class HWnd {
 		this.handle = handle;
 	}
 
+	HWnd(long handle, WndProc wndproc) {
+		this.handle = handle;
+		if(handle != 0l && wndproc != null)
+			HWnd.registerWndProc(handle, wndproc);
+	}
+
 	long getHandle() {
 		return handle;
 	}
