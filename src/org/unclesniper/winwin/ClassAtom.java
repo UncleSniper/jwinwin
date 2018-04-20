@@ -19,4 +19,10 @@ public final class ClassAtom {
 		return wndproc;
 	}
 
+	public HWnd createWindowEx(int dwExStyle, String lpWindowName,
+			int dwStyle, int x, int y, int nWidth, int nHeight, HWnd hWndParent, HMenu hMenu) {
+		return HWnd.createWindowEx(dwExStyle, this, lpWindowName, dwStyle,
+				x, y, nWidth, nHeight, hWndParent, hMenu);
+	}
+
 }

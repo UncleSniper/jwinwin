@@ -21,6 +21,43 @@ public class WinAPI {
 		}
 	}
 
+	public static final int COLOR_3DDKSHADOW = 21;
+	public static final int COLOR_3DFACE = 15;
+	public static final int COLOR_3DHIGHLIGHT = 20;
+	public static final int COLOR_3DHILIGHT = 20;
+	public static final int COLOR_3DLIGHT = 22;
+	public static final int COLOR_3DSHADOW = 16;
+	public static final int COLOR_ACTIVEBORDER = 10;
+	public static final int COLOR_ACTIVECAPTION = 2;
+	public static final int COLOR_APPWORKSPACE = 12;
+	public static final int COLOR_BACKGROUND = 1;
+	public static final int COLOR_BTNFACE = 15;
+	public static final int COLOR_BTNHIGHLIGHT = 20;
+	public static final int COLOR_BTNHILIGHT = 20;
+	public static final int COLOR_BTNSHADOW = 16;
+	public static final int COLOR_BTNTEXT = 18;
+	public static final int COLOR_CAPTIONTEXT = 9;
+	public static final int COLOR_DESKTOP = 1;
+	public static final int COLOR_GRADIENTACTIVECAPTION = 27;
+	public static final int COLOR_GRADIENTINACTIVECAPTION = 28;
+	public static final int COLOR_GRAYTEXT = 17;
+	public static final int COLOR_HIGHLIGHT = 13;
+	public static final int COLOR_HIGHLIGHTTEXT = 14;
+	public static final int COLOR_HOTLIGHT = 26;
+	public static final int COLOR_INACTIVEBORDER = 11;
+	public static final int COLOR_INACTIVECAPTION = 3;
+	public static final int COLOR_INACTIVECAPTIONTEXT = 19;
+	public static final int COLOR_INFOBK = 24;
+	public static final int COLOR_INFOTEXT = 23;
+	public static final int COLOR_MENU = 4;
+	public static final int COLOR_MENUHILIGHT = 29;
+	public static final int COLOR_MENUBAR = 30;
+	public static final int COLOR_MENUTEXT = 7;
+	public static final int COLOR_SCROLLBAR = 0;
+	public static final int COLOR_WINDOW = 5;
+	public static final int COLOR_WINDOWFRAME = 6;
+	public static final int COLOR_WINDOWTEXT = 8;
+
 	private static final String DLL_NAME = "jwinwin";
 
 	private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();

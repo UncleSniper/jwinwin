@@ -8,4 +8,8 @@ public final class HCursor {
 		this.handle = handle;
 	}
 
+	long getHandle() {
+		return handle;
+	}
+
 }

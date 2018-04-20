@@ -1,4 +1,4 @@
-#include "global.h"
+#include "stringutils.h"
 
 static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM lparam) {
 	JNIEnv *env;
@@ -22,8 +22,45 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 			if((*env)->ExceptionCheck(env) == JNI_FALSE)
 				(*env)->CallVoidMethod(env, cbobj, mth_WmClose_wmClose, winwrap);
 			return (LRESULT)0;
+		case WM_ACTIVATEAPP:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+				(*env)->CallVoidMethod(env, cbobj, mth_WmActivateApp_wmActivateApp,
+						winwrap, wparam ? JNI_TRUE : JNI_FALSE);
+			return (LRESULT)0;
+		case WM_CANCELMODE:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+				(*env)->CallVoidMethod(env, cbobj, mth_WmCancelMode_wmCancelMode, winwrap);
+			return (LRESULT)0;
+		case WM_CHILDACTIVATE:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+				(*env)->CallVoidMethod(env, cbobj, mth_WmChildActivate_wmChildActivate, winwrap);
+			return (LRESULT)0;
+		case WM_ENABLE:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+				(*env)->CallVoidMethod(env, cbobj, mth_WmEnable_wmEnable,
+						winwrap, wparam ? JNI_TRUE : JNI_FALSE);
+			return (LRESULT)0;
+		case WM_ENTERSIZEMOVE:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+				(*env)->CallVoidMethod(env, cbobj, mth_WmEnterSizeMove_wmEnterSizeMove, winwrap);
+			return (LRESULT)0;
+		case WM_EXITSIZEMOVE:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+				(*env)->CallVoidMethod(env, cbobj, mth_WmExitSizeMove_wmExitSizeMove, winwrap);
+			return (LRESULT)0;
+		case WM_GETICON:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) != JNI_FALSE)
+				return (LRESULT)0;
+			/*TODO*/
+			return (LRESULT)0;
 		default:
-		skip:
 			return DefWindowProc(win, msg, wparam, lparam);
 	}
 }
@@ -32,6 +69,7 @@ JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_WndClassEx_registerClassExImp
 	WNDCLASSEX info;
 	jobject child;
 	jstring className;
+	WCHAR *classChars;
 	ATOM atom;
 	ZeroMemory(&info, (SIZE_T)sizeof(info));
 	info.cbSize = (UINT)sizeof(info);
@@ -48,16 +86,24 @@ JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_WndClassEx_registerClassExImp
 	info.lpszMenuName = NULL;
 	className = (*env)->GetObjectField(env, clswrap, fld_WndClassEx_lpszClassName);
 	if(className) {
-		info.lpszClassName = (*env)->GetStringUTFChars(env, className, NULL);
-		if(!info.lpszClassName)
+		classChars = jstringToLPWSTR(env, className);
+		if(!classChars)
 			return (jint)0;
+		info.lpszClassName = classChars;
 	}
-	else
-		info.lpszClassName = "jwinwinStubClass";
+	else {
+		classChars = NULL;
+		info.lpszClassName = L"jwinwinStubClass";
+	}
 	child = (*env)->GetObjectField(env, clswrap, fld_WndClassEx_hIconSm);
 	info.hIconSm = child ? getIconHandle(env, child) : NULL;
+	if((*env)->ExceptionCheck(env) != JNI_FALSE) {
+		if(classChars)
+			HeapFree(theHeap, (DWORD)0u, classChars);
+		return (jint)0;
+	}
 	atom = RegisterClassEx(&info);
-	if(className)
-		(*env)->ReleaseStringUTFChars(env, className, info.lpszClassName);
+	if(classChars)
+		HeapFree(theHeap, (DWORD)0u, classChars);
 	return (jint)atom;
 }

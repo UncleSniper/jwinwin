@@ -88,6 +88,9 @@
 			<arg value="-o"/>
 			<arg value="${binres}/${jni.dll.name}.dll"/>
 			<arg value="-O2"/>
+			<arg line="-Wall -Wextra -pedantic -Wno-unused-parameter"/>
+			<arg value="-DUNICODE"/>
+			<arg value="${jni.dir}/stringutils.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_WinAPI.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_HWnd.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_WndClassEx.c"/>

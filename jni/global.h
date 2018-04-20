@@ -2,7 +2,10 @@
 #define JWINWIN_JNI_GLOBAL_H
 
 #include <jni.h>
+#include <stdint.h>
 #include <windows.h>
+
+extern HANDLE theHeap;
 
 extern JavaVM *theJVM;
 
@@ -31,6 +34,9 @@ extern jfieldID fld_HCursor_handle;
 extern jclass cls_HBrush;
 extern jfieldID fld_HBrush_handle;
 
+extern jclass cls_HMenu;
+extern jfieldID fld_HMenu_handle;
+
 extern jclass cls_WndProc;
 
 extern jclass cls_WmDestroy;
@@ -38,6 +44,27 @@ extern jmethodID mth_WmDestroy_wmDestroy;
 
 extern jclass cls_WmClose;
 extern jmethodID mth_WmClose_wmClose;
+
+extern jclass cls_WmCancelMode;
+extern jmethodID mth_WmCancelMode_wmCancelMode;
+
+extern jclass cls_WmActivateApp;
+extern jmethodID mth_WmActivateApp_wmActivateApp;
+
+extern jclass cls_WmChildActivate;
+extern jmethodID mth_WmChildActivate_wmChildActivate;
+
+extern jclass cls_WmEnable;
+extern jmethodID mth_WmEnable_wmEnable;
+
+extern jclass cls_WmEnterSizeMove;
+extern jmethodID mth_WmEnterSizeMove_wmEnterSizeMove;
+
+extern jclass cls_WmExitSizeMove;
+extern jmethodID mth_WmExitSizeMove_wmExitSizeMove;
+
+extern jclass cls_WmGetIcon;
+extern jmethodID mth_WmGetIcon_wmGetIcon;
 
 inline HWND getWndHandle(JNIEnv *env, jobject winwrap) {
 	return (HWND)(*env)->GetLongField(env, winwrap, fld_HWnd_handle);

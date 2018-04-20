@@ -1,10 +1,10 @@
 package org.unclesniper.winwin;
 
-public final class HIcon {
+public final class HMenu {
 
 	private final long handle;
 
-	HIcon(long handle) {
+	HMenu(long handle) {
 		this.handle = handle;
 	}
 

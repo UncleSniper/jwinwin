@@ -8,4 +8,8 @@ public final class HBrush {
 		this.handle = handle;
 	}
 
+	long getHandle() {
+		return handle;
+	}
+
 }

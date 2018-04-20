@@ -23,6 +23,62 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmDestroy
 JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmClose
   (JNIEnv *, jclass, jobject);
 
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmActivateApp
+ * Signature: (Lorg/unclesniper/winwin/HWnd;Z)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmActivateApp
+  (JNIEnv *, jclass, jobject, jboolean);
+
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmCancelMode
+ * Signature: (Lorg/unclesniper/winwin/HWnd;)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmCancelMode
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmChildActivate
+ * Signature: (Lorg/unclesniper/winwin/HWnd;)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmChildActivate
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmEnable
+ * Signature: (Lorg/unclesniper/winwin/HWnd;Z)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmEnable
+  (JNIEnv *, jclass, jobject, jboolean);
+
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmEnterSizeMove
+ * Signature: (Lorg/unclesniper/winwin/HWnd;)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmEnterSizeMove
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmExitSizeMove
+ * Signature: (Lorg/unclesniper/winwin/HWnd;)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmExitSizeMove
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmGetIconImpl
+ * Signature: (JII)J
+ */
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmGetIconImpl
+  (JNIEnv *, jclass, jlong, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif

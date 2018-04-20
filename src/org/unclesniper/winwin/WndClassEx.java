@@ -35,6 +35,59 @@ public final class WndClassEx {
 
 	public WndClassEx() {}
 
+	public WndClassEx(String lpszClassName, WndProc lpfnWndProc) {
+		this.lpszClassName = lpszClassName;
+		this.lpfnWndProc = lpfnWndProc;
+	}
+
+	public WndClassEx(String lpszClassName) {
+		this(lpszClassName, null);
+	}
+
+	public WndClassEx(WndProc lpfnWndProc) {
+		this(null ,lpfnWndProc);
+	}
+
+	public WndClassEx withStyle(int style) {
+		this.style = style;
+		return this;
+	}
+
+	public WndClassEx withWndProc(WndProc lpfnWndProc) {
+		this.lpfnWndProc = lpfnWndProc;
+		return this;
+	}
+
+	public WndClassEx withIcon(HIcon hIcon) {
+		this.hIcon = hIcon;
+		return this;
+	}
+
+	public WndClassEx withCursor(HCursor hCursor) {
+		this.hCursor = hCursor;
+		return this;
+	}
+
+	public WndClassEx withBackground(HBrush hbrBackground) {
+		this.hbrBackground = hbrBackground;
+		return this;
+	}
+
+	public WndClassEx withBackground(int sysColor) {
+		this.hbrBackground = new HBrush((long)sysColor + 1l);
+		return this;
+	}
+
+	public WndClassEx withName(String lpszClassName) {
+		this.lpszClassName = lpszClassName;
+		return this;
+	}
+
+	public WndClassEx withIconSmall(HIcon hIconSm) {
+		this.hIconSm = hIconSm;
+		return this;
+	}
+
 	public ClassAtom registerClassEx() {
 		int atom = registerClassExImpl();
 		if(atom == 0)
