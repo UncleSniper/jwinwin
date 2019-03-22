@@ -61,11 +61,18 @@ jmethodID mth_WmExitSizeMove_wmExitSizeMove;
 
 jclass cls_WmGetIcon;
 jmethodID mth_WmGetIcon_wmGetIcon;
+jclass cls_WmGetIcon_GetIconType;
+jmethodID mth_WmGetIcon_GetIconType_byOrdinal;
+
+jclass cls_WmMove;
+jmethodID mth_WmMove_wmMove;
 
 #define BEGIN_BIND_CLASS(vname, qname) \
 	cls_ ## vname = (*env)->FindClass(env, qname); \
 	if(cls_ ## vname) {
 #define BIND_UCLASS(vname) BEGIN_BIND_CLASS(vname, "org/unclesniper/winwin/" #vname)
+#define BIND_UNCLASS(ovname, ivname) \
+	BEGIN_BIND_CLASS(ovname ## _ ## ivname, "org/unclesniper/winwin/" #ovname "$" #ivname)
 #define END_BIND_CLASS(vname) \
 		cls_ ## vname = (*env)->NewGlobalRef(env, cls_ ## vname); \
 	}
@@ -141,6 +148,12 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 		BIND_IMETHOD(WmGetIcon, wmGetIcon, "(Lorg/unclesniper/winwin/HWnd;"
 				"Lorg/unclesniper/winwin/WmGetIcon$GetIconType;I)Lorg/unclesniper/winwin/HIcon;")
 	END_BIND_CLASS(WmGetIcon)
+	BIND_UNCLASS(WmGetIcon, GetIconType)
+		BIND_SMETHOD(WmGetIcon_GetIconType, byOrdinal, "(I)Lorg/unclesniper/winwin/WmGetIcon$GetIconType;")
+	END_BIND_CLASS(WmGetIcon_GetIconType)
+	BIND_UCLASS(WmMove)
+		BIND_IMETHOD(WmMove, wmMove, "(Lorg/unclesniper/winwin/HWnd;II)V")
+	END_BIND_CLASS(WmMove)
 	(*env)->GetJavaVM(env, &theJVM);
 	theHeap = GetProcessHeap();
 }

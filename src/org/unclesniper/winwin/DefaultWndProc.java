@@ -42,4 +42,8 @@ public class DefaultWndProc implements WndProc {
 		return DefWindowProc.wmGetIcon(hwnd, type, dpi);
 	}
 
+	public void wmMove(HWnd hwnd, int x, int y) {
+		DefWindowProc.wmMove(hwnd, x, y);
+	}
+
 }

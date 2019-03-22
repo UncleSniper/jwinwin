@@ -79,6 +79,14 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmExitSizeMove
 JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmGetIconImpl
   (JNIEnv *, jclass, jlong, jint, jint);
 
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmMove
+ * Signature: (Lorg/unclesniper/winwin/HWnd;II)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmMove
+  (JNIEnv *, jclass, jobject, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif

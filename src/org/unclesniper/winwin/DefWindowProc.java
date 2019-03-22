@@ -29,4 +29,6 @@ public final class DefWindowProc {
 
 	public static native long wmGetIconImpl(long hwnd, int type, int dpi);
 
+	public static native void wmMove(HWnd hwnd, int x, int y);
+
 }

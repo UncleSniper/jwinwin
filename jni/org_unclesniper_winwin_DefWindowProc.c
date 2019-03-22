@@ -52,3 +52,14 @@ JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmGetIconImpl(
 		jclass clazz, jlong hwnd, jint type, jint dpi) {
 	return (jlong)DefWindowProc((HWND)hwnd, WM_GETICON, (WPARAM)type, (LPARAM)dpi);
 }
+
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmMove(JNIEnv *env,
+		jclass clazz, jobject winwrap, jint x, jint y) {
+	HWND hwnd = getWndHandle(env, winwrap);
+	WORD xw, yw;
+	if(!hwnd)
+		return;
+	xw = (WORD)(short)x;
+	yw = (WORD)(short)y;
+	DefWindowProc(hwnd, WM_MOVE, (WPARAM)0, (LPARAM)((DWORD)xw | ((DWORD)yw << 16)));
+}

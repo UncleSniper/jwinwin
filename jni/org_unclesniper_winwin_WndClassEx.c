@@ -2,7 +2,8 @@
 
 static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM lparam) {
 	JNIEnv *env;
-	jobject cbobj, winwrap;
+	jobject cbobj, winwrap, objresult, shuntobj;
+	HICON icnhndl;
 	if((*theJVM)->GetEnv(theJVM, (void**)&env, JNI_VERSION_1_8) != JNI_OK)
 		return DefWindowProc(win, msg, wparam, lparam);
 	cbobj = (*env)->CallStaticObjectMethod(env, cls_HWnd, mth_HWnd_getWndProcByHandle, (jlong)win);
@@ -58,7 +59,22 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 			winwrap = wrapWndHandle(env, win);
 			if((*env)->ExceptionCheck(env) != JNI_FALSE)
 				return (LRESULT)0;
-			/*TODO*/
+			shuntobj = (*env)->CallStaticObjectMethod(env, cls_WmGetIcon_GetIconType,
+					mth_WmGetIcon_GetIconType_byOrdinal, (jint)wparam);
+			if((*env)->ExceptionCheck(env))
+				return (LRESULT)0;
+			objresult = (*env)->CallObjectMethod(env, cbobj, mth_WmGetIcon_wmGetIcon, shuntobj, (jint)lparam);
+			if((*env)->ExceptionCheck(env))
+				return (LRESULT)0;
+			icnhndl = getIconHandle(env, objresult);
+			if((*env)->ExceptionCheck(env))
+				return (LRESULT)0;
+			return (LRESULT)icnhndl;
+		case WM_MOVE:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+				(*env)->CallVoidMethod(env, cbobj, mth_WmMove_wmMove, winwrap,
+						(jint)(short)LOWORD(lparam), (jint)(short)HIWORD(lparam));
 			return (LRESULT)0;
 		default:
 			return DefWindowProc(win, msg, wparam, lparam);

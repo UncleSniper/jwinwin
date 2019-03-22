@@ -65,6 +65,11 @@ extern jmethodID mth_WmExitSizeMove_wmExitSizeMove;
 
 extern jclass cls_WmGetIcon;
 extern jmethodID mth_WmGetIcon_wmGetIcon;
+extern jclass cls_WmGetIcon_GetIconType;
+extern jmethodID mth_WmGetIcon_GetIconType_byOrdinal;
+
+extern jclass cls_WmMove;
+extern jmethodID mth_WmMove_wmMove;
 
 inline HWND getWndHandle(JNIEnv *env, jobject winwrap) {
 	return (HWND)(*env)->GetLongField(env, winwrap, fld_HWnd_handle);

@@ -17,7 +17,7 @@
 	<property name="gcc" value="x86_64-w64-mingw32-gcc"/>
 	<property name="jni.dir" value="jni"/>
 	<property name="jni.dll.name" value="jwinwin"/>
-	<property name="jni.system.headers" value="jwinwin"/>
+	<property name="jni.system.headers" value=""/>
 
 	<path id="build.classpath">
 		<fileset dir="${lib}" includes="**/*.jar"/>

@@ -69,7 +69,7 @@ public class DebugWndProc implements WndProc {
 	}
 
 	public HIcon wmGetIcon(HWnd hwnd, GetIconType type, int dpi) {
-		String prefix = "WM_GETICON: " + DebugWndProc.hwndMsg(hwnd) + ", type = " + type + ", dpi = " + dpi;
+		String prefix = "WM_GETICON: " + DebugWndProc.hwndMsg(hwnd) + ", type = " + type.name() + ", dpi = " + dpi;
 		if(slave != null) {
 			HIcon icon = slave.wmGetIcon(hwnd, type, dpi);
 			System.err.print(prefix + " => ");
@@ -80,6 +80,12 @@ public class DebugWndProc implements WndProc {
 			System.err.println(prefix);
 			return null;
 		}
+	}
+
+	public void wmMove(HWnd hwnd, int x, int y) {
+		System.err.println("WM_MOVE: " + DebugWndProc.hwndMsg(hwnd) + ", x = " + x + ", y = " + y);
+		if(slave != null)
+			slave.wmMove(hwnd, x, y);
 	}
 
 }
