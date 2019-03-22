@@ -61,19 +61,29 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 				return (LRESULT)0;
 			shuntobj = (*env)->CallStaticObjectMethod(env, cls_WmGetIcon_GetIconType,
 					mth_WmGetIcon_GetIconType_byOrdinal, (jint)wparam);
-			if((*env)->ExceptionCheck(env))
+			if((*env)->ExceptionCheck(env) != JNI_FALSE)
 				return (LRESULT)0;
 			objresult = (*env)->CallObjectMethod(env, cbobj, mth_WmGetIcon_wmGetIcon, shuntobj, (jint)lparam);
-			if((*env)->ExceptionCheck(env))
+			if((*env)->ExceptionCheck(env) != JNI_FALSE)
 				return (LRESULT)0;
 			icnhndl = getIconHandle(env, objresult);
-			if((*env)->ExceptionCheck(env))
+			if((*env)->ExceptionCheck(env) != JNI_FALSE)
 				return (LRESULT)0;
 			return (LRESULT)icnhndl;
 		case WM_MOVE:
 			winwrap = wrapWndHandle(env, win);
 			if((*env)->ExceptionCheck(env) == JNI_FALSE)
 				(*env)->CallVoidMethod(env, cbobj, mth_WmMove_wmMove, winwrap,
+						(jint)(short)LOWORD(lparam), (jint)(short)HIWORD(lparam));
+			return (LRESULT)0;
+		case WM_SIZE:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) != JNI_FALSE)
+				return (LRESULT)0;
+			shuntobj = (*env)->CallStaticObjectMethod(env, cls_WmSize_SizeType,
+					mth_WmSize_SizeType_byOrdinal, (jint)wparam);
+			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+				(*env)->CallVoidMethod(env, cbobj, mth_WmSize_wmSize, winwrap, shuntobj,
 						(jint)(short)LOWORD(lparam), (jint)(short)HIWORD(lparam));
 			return (LRESULT)0;
 		default:

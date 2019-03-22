@@ -46,4 +46,8 @@ public class DefaultWndProc implements WndProc {
 		DefWindowProc.wmMove(hwnd, x, y);
 	}
 
+	public void wmSize(HWnd hwnd, SizeType type, int width, int height) {
+		DefWindowProc.wmSize(hwnd, type, width, height);
+	}
+
 }

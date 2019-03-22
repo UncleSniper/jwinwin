@@ -27,8 +27,15 @@ public final class DefWindowProc {
 		return handle == 0l ? null : new HIcon(handle);
 	}
 
-	public static native long wmGetIconImpl(long hwnd, int type, int dpi);
+	private static native long wmGetIconImpl(long hwnd, int type, int dpi);
 
 	public static native void wmMove(HWnd hwnd, int x, int y);
+
+	public static void wmSize(HWnd hwnd, WmSize.SizeType type, int width, int height) {
+		if(hwnd != null && type != null)
+			DefWindowProc.wmSizeImpl(hwnd.getHandle(), type.ordinal(), width, height);
+	}
+
+	private static native void wmSizeImpl(long hwnd, int type, int width, int height);
 
 }

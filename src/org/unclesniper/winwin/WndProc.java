@@ -10,5 +10,6 @@ public interface WndProc extends
 	WmEnterSizeMove,
 	WmExitSizeMove,
 	WmGetIcon,
-	WmMove
+	WmMove,
+	WmSize
 	{}

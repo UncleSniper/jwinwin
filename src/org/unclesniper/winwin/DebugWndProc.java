@@ -88,4 +88,11 @@ public class DebugWndProc implements WndProc {
 			slave.wmMove(hwnd, x, y);
 	}
 
+	public void wmSize(HWnd hwnd, SizeType type, int width, int height) {
+		System.err.println("WM_SIZE: " + DebugWndProc.hwndMsg(hwnd) + ", type = " + type.name()
+				+ ", width = " + width + ", height = " + height);
+		if(slave != null)
+			slave.wmSize(hwnd, type, width, height);
+	}
+
 }
