@@ -71,3 +71,11 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmSizeImpl(JNIE
 	hw = (WORD)(short)height;
 	DefWindowProc((HWND)hwnd, WM_SIZE, (WPARAM)type, (LPARAM)((DWORD)ww | ((DWORD)hw << 16)));
 }
+
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmActivateImpl(JNIEnv *env,
+		jclass clazz, jlong hwnd, jlong other, jint type, jboolean minimized) {
+	WORD tw, mw;
+	tw = (WORD)type;
+	mw = (WORD)(minimized != JNI_FALSE);
+	DefWindowProc((HWND)hwnd, WM_ACTIVATE, (WPARAM)((DWORD)tw | ((DWORD)mw << 16)), (LPARAM)other);
+}

@@ -76,6 +76,11 @@ extern jmethodID mth_WmSize_wmSize;
 extern jclass cls_WmSize_SizeType;
 extern jmethodID mth_WmSize_SizeType_byOrdinal;
 
+extern jclass cls_WmActivate;
+extern jmethodID mth_WmActivate_wmActivate;
+extern jclass cls_WmActivate_ActivateType;
+extern jmethodID mth_WmActivate_ActivateType_byOrdinal;
+
 inline HWND getWndHandle(JNIEnv *env, jobject winwrap) {
 	return (HWND)(*env)->GetLongField(env, winwrap, fld_HWnd_handle);
 }

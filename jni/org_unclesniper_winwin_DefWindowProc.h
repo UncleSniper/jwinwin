@@ -95,6 +95,14 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmMove
 JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmSizeImpl
   (JNIEnv *, jclass, jlong, jint, jint, jint);
 
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmActivateImpl
+ * Signature: (JJIZ)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmActivateImpl
+  (JNIEnv *, jclass, jlong, jlong, jint, jboolean);
+
 #ifdef __cplusplus
 }
 #endif

@@ -50,4 +50,8 @@ public class DefaultWndProc implements WndProc {
 		DefWindowProc.wmSize(hwnd, type, width, height);
 	}
 
+	public void wmActivate(HWnd hwnd, HWnd other, ActivateType type, boolean minimized) {
+		DefWindowProc.wmActivate(hwnd, other, type, minimized);
+	}
+
 }

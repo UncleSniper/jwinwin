@@ -20,6 +20,10 @@ public class DebugWndProc implements WndProc {
 		return hwnd == null ? "hwnd = NULL" : "hwnd = 0x" + Long.toHexString(hwnd.getHandle());
 	}
 
+	private static String hwndMsg(HWnd hwnd, String name) {
+		return name + (hwnd == null ? " = NULL" : " = 0x" + Long.toHexString(hwnd.getHandle()));
+	}
+
 	public void wmDestroy(HWnd hwnd) {
 		System.err.println("WM_DESTROY: " + DebugWndProc.hwndMsg(hwnd));
 		if(slave != null)
@@ -93,6 +97,13 @@ public class DebugWndProc implements WndProc {
 				+ ", width = " + width + ", height = " + height);
 		if(slave != null)
 			slave.wmSize(hwnd, type, width, height);
+	}
+
+	public void wmActivate(HWnd hwnd, HWnd other, ActivateType type, boolean minimized) {
+		System.err.println("WM_ACTIVATE: " + DebugWndProc.hwndMsg(hwnd) + ", "
+				+ DebugWndProc.hwndMsg(other, "other") + ", type = " + type.name() + ", minimized = " + minimized);
+		if(slave != null)
+			slave.wmActivate(hwnd, other, type, minimized);
 	}
 
 }

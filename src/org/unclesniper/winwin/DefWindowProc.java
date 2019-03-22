@@ -38,4 +38,12 @@ public final class DefWindowProc {
 
 	private static native void wmSizeImpl(long hwnd, int type, int width, int height);
 
+	public static void wmActivate(HWnd hwnd, HWnd other, WmActivate.ActivateType type, boolean minimized) {
+		if(hwnd != null)
+			DefWindowProc.wmActivateImpl(hwnd.getHandle(), other == null ? 0l : other.getHandle(),
+					type.ordinal(), minimized);
+	}
+
+	private static native void wmActivateImpl(long hwnd, long other, int type, boolean minimized);
+
 }

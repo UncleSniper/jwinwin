@@ -72,6 +72,11 @@ jmethodID mth_WmSize_wmSize;
 jclass cls_WmSize_SizeType;
 jmethodID mth_WmSize_SizeType_byOrdinal;
 
+jclass cls_WmActivate;
+jmethodID mth_WmActivate_wmActivate;
+jclass cls_WmActivate_ActivateType;
+jmethodID mth_WmActivate_ActivateType_byOrdinal;
+
 #define BEGIN_BIND_CLASS(vname, qname) \
 	cls_ ## vname = (*env)->FindClass(env, qname); \
 	if(cls_ ## vname) {
@@ -165,6 +170,13 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	BIND_UNCLASS(WmSize, SizeType)
 		BIND_SMETHOD(WmSize_SizeType, byOrdinal, "(I)Lorg/unclesniper/winwin/WmSize$SizeType;")
 	END_BIND_CLASS(WmSize_SizeType)
+	BIND_UCLASS(WmActivate)
+		BIND_IMETHOD(WmActivate, wmActivate, "(Lorg/unclesniper/winwin/HWnd;Lorg/unclesniper/winwin/HWnd;"
+				"Lorg/unclesniper/winwin/WmActivate$ActivateType;Z)V")
+	END_BIND_CLASS(WmActivate)
+	BIND_UNCLASS(WmActivate, ActivateType)
+		BIND_SMETHOD(WmActivate_ActivateType, byOrdinal, "(I)Lorg/unclesniper/winwin/WmActivate$ActivateType;")
+	END_BIND_CLASS(WmActivate_ActivateType)
 	(*env)->GetJavaVM(env, &theJVM);
 	theHeap = GetProcessHeap();
 }
