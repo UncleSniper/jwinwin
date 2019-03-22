@@ -12,5 +12,6 @@ public interface WndProc extends
 	WmGetIcon,
 	WmMove,
 	WmSize,
-	WmActivate
+	WmActivate,
+	WmSetFocus
 	{}

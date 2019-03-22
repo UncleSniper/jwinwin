@@ -106,4 +106,11 @@ public class DebugWndProc implements WndProc {
 			slave.wmActivate(hwnd, other, type, minimized);
 	}
 
+	public void wmSetFocus(HWnd hwnd, HWnd other) {
+		System.err.println("WM_SETFOCUS: " + DebugWndProc.hwndMsg(hwnd) + ", "
+				+ DebugWndProc.hwndMsg(other, "other"));
+		if(slave != null)
+			slave.wmSetFocus(hwnd, other);
+	}
+
 }

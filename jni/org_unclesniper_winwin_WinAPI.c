@@ -77,6 +77,9 @@ jmethodID mth_WmActivate_wmActivate;
 jclass cls_WmActivate_ActivateType;
 jmethodID mth_WmActivate_ActivateType_byOrdinal;
 
+jclass cls_WmSetFocus;
+jmethodID mth_WmSetFocus_wmSetFocus;
+
 #define BEGIN_BIND_CLASS(vname, qname) \
 	cls_ ## vname = (*env)->FindClass(env, qname); \
 	if(cls_ ## vname) {
@@ -177,6 +180,9 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	BIND_UNCLASS(WmActivate, ActivateType)
 		BIND_SMETHOD(WmActivate_ActivateType, byOrdinal, "(I)Lorg/unclesniper/winwin/WmActivate$ActivateType;")
 	END_BIND_CLASS(WmActivate_ActivateType)
+	BIND_UCLASS(WmSetFocus)
+		BIND_IMETHOD(WmSetFocus, wmSetFocus, "(Lorg/unclesniper/winwin/HWnd;Lorg/unclesniper/winwin/HWnd;)V")
+	END_BIND_CLASS(WmSetFocus)
 	(*env)->GetJavaVM(env, &theJVM);
 	theHeap = GetProcessHeap();
 }

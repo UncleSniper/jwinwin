@@ -103,6 +103,14 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmSizeImpl
 JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmActivateImpl
   (JNIEnv *, jclass, jlong, jlong, jint, jboolean);
 
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmSetFocus
+ * Signature: (Lorg/unclesniper/winwin/HWnd;Lorg/unclesniper/winwin/HWnd;)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmSetFocus
+  (JNIEnv *, jclass, jobject, jobject);
+
 #ifdef __cplusplus
 }
 #endif

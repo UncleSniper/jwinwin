@@ -54,4 +54,8 @@ public class DefaultWndProc implements WndProc {
 		DefWindowProc.wmActivate(hwnd, other, type, minimized);
 	}
 
+	public void wmSetFocus(HWnd hwnd, HWnd other) {
+		DefWindowProc.wmSetFocus(hwnd, other);
+	}
+
 }

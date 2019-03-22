@@ -46,4 +46,6 @@ public final class DefWindowProc {
 
 	private static native void wmActivateImpl(long hwnd, long other, int type, boolean minimized);
 
+	public static native void wmSetFocus(HWnd hwnd, HWnd other);
+
 }
