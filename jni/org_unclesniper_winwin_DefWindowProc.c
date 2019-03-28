@@ -95,3 +95,19 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmSetFocus(JNIE
 		ohwnd = NULL;
 	DefWindowProc(hwnd, WM_SETFOCUS, (WPARAM)ohwnd, (LPARAM)0);
 }
+
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmKillFocus(JNIEnv *env,
+		jclass clazz, jobject winwrap, jobject otherwinwrap) {
+	HWND hwnd, ohwnd;
+	hwnd = getWndHandle(env, winwrap);
+	if(!hwnd)
+		return;
+	if(otherwinwrap) {
+		ohwnd = getWndHandle(env, otherwinwrap);
+		if(!ohwnd)
+			return;
+	}
+	else
+		ohwnd = NULL;
+	DefWindowProc(hwnd, WM_KILLFOCUS, (WPARAM)ohwnd, (LPARAM)0);
+}

@@ -84,6 +84,9 @@ extern jmethodID mth_WmActivate_ActivateType_byOrdinal;
 extern jclass cls_WmSetFocus;
 extern jmethodID mth_WmSetFocus_wmSetFocus;
 
+extern jclass cls_WmKillFocus;
+extern jmethodID mth_WmKillFocus_wmKillFocus;
+
 inline HWND getWndHandle(JNIEnv *env, jobject winwrap) {
 	return (HWND)(*env)->GetLongField(env, winwrap, fld_HWnd_handle);
 }

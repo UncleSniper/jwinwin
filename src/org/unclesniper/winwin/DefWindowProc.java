@@ -48,4 +48,6 @@ public final class DefWindowProc {
 
 	public static native void wmSetFocus(HWnd hwnd, HWnd other);
 
+	public static native void wmKillFocus(HWnd hwnd, HWnd other);
+
 }

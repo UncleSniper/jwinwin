@@ -13,5 +13,6 @@ public interface WndProc extends
 	WmMove,
 	WmSize,
 	WmActivate,
-	WmSetFocus
+	WmSetFocus,
+	WmKillFocus
 	{}

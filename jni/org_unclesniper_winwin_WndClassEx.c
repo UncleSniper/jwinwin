@@ -116,6 +116,19 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 				otherwinwrap = NULL;
 			(*env)->CallVoidMethod(env, cbobj, mth_WmSetFocus_wmSetFocus, winwrap, otherwinwrap);
 			return (LRESULT)0;
+		case WM_KILLFOCUS:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) != JNI_FALSE)
+				return (LRESULT)0;
+			if(wparam) {
+				otherwinwrap = wrapWndHandle(env, (HWND)wparam);
+				if((*env)->ExceptionCheck(env) != JNI_FALSE)
+					return (LRESULT)0;
+			}
+			else
+				otherwinwrap = NULL;
+			(*env)->CallVoidMethod(env, cbobj, mth_WmKillFocus_wmKillFocus, winwrap, otherwinwrap);
+			return (LRESULT)0;
 		default:
 			return DefWindowProc(win, msg, wparam, lparam);
 	}
