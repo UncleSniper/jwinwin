@@ -1,4 +1,5 @@
 #include <jni.h>
+#include <string.h>
 #include <windows.h>
 
 HANDLE theHeap;
@@ -212,12 +213,12 @@ JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_WinAPI_getLastError(JNIEnv *e
 
 JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_WinAPI_rawErrorMessageFromCode(JNIEnv *env,
 		jclass clazz, jint errorCode) {
-	char *buffer;
+	WCHAR *buffer;
 	jstring message;
 	if(!FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, (DWORD)errorCode,
-			(DWORD)0u, (LPTSTR)&buffer, (DWORD)0u, NULL))
+			(DWORD)0u, (LPWSTR)&buffer, (DWORD)0u, NULL))
 		return NULL;
-	message = (*env)->NewStringUTF(env, buffer);
+	message = (*env)->NewString(env, (const jchar*)buffer, (jsize)wcslen(buffer));
 	LocalFree(buffer);
 	return message;
 }
