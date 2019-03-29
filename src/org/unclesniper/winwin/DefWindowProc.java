@@ -50,4 +50,11 @@ public final class DefWindowProc {
 
 	public static native void wmKillFocus(HWnd hwnd, HWnd other);
 
+	public static WmSetText.SetTextResult wmSetText(HWnd hwnd, String text) {
+		return WmSetText.SetTextResult.byOrdinal(DefWindowProc.wmSetTextImpl(hwnd.getHandle(),
+				text == null ? "" : text));
+	}
+
+	private static native int wmSetTextImpl(long hwnd, String text);
+
 }

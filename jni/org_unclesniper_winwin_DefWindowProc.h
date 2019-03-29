@@ -119,6 +119,14 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmSetFocus
 JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmKillFocus
   (JNIEnv *, jclass, jobject, jobject);
 
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmSetTextImpl
+ * Signature: (JLjava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmSetTextImpl
+  (JNIEnv *, jclass, jlong, jstring);
+
 #ifdef __cplusplus
 }
 #endif

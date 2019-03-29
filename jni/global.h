@@ -9,6 +9,9 @@ extern HANDLE theHeap;
 
 extern JavaVM *theJVM;
 
+extern jclass cls_Enum;
+extern jmethodID mth_Enum_ordinal;
+
 extern jclass cls_HWnd;
 extern jfieldID fld_HWnd_handle;
 extern jmethodID ctor_HWnd;
@@ -86,6 +89,9 @@ extern jmethodID mth_WmSetFocus_wmSetFocus;
 
 extern jclass cls_WmKillFocus;
 extern jmethodID mth_WmKillFocus_wmKillFocus;
+
+extern jclass cls_WmSetText;
+extern jmethodID mth_WmSetText_wmSetText;
 
 inline HWND getWndHandle(JNIEnv *env, jobject winwrap) {
 	return (HWND)(*env)->GetLongField(env, winwrap, fld_HWnd_handle);

@@ -76,4 +76,9 @@ public class DefaultWndProc implements WndProc {
 		DefWindowProc.wmKillFocus(hwnd, other);
 	}
 
+	@Override
+	public SetTextResult wmSetText(HWnd hwnd, String text) {
+		return DefWindowProc.wmSetText(hwnd, text);
+	}
+
 }

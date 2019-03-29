@@ -134,4 +134,13 @@ public class DebugWndProc implements WndProc {
 			slave.wmKillFocus(hwnd, other);
 	}
 
+	@Override
+	public SetTextResult wmSetText(HWnd hwnd, String text) {
+		System.err.println("WM_SETFOCUS: " + DebugWndProc.hwndMsg(hwnd) + ", text = \"" + text + '"');
+		if (slave != null)
+			return slave.wmSetText(hwnd, text);
+		else
+			return SetTextResult.FALSE;
+	}
+
 }

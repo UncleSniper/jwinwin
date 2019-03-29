@@ -20,3 +20,7 @@ WCHAR *jstringToLPWSTR(JNIEnv *env, jstring str) {
 	buffer[length] = (WCHAR)0;
 	return buffer;
 }
+
+jstring lpcwstrToJString(JNIEnv *env, LPCWSTR chars) {
+	return (*env)->NewString(env, (const jchar*)chars, (jsize)wcslen(chars));
+}

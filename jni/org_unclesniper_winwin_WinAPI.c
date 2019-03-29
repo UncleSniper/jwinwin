@@ -5,6 +5,9 @@ HANDLE theHeap;
 
 JavaVM *theJVM = NULL;
 
+jclass cls_Enum;
+jmethodID mth_Enum_ordinal;
+
 jclass cls_HWnd;
 jfieldID fld_HWnd_handle;
 jmethodID ctor_HWnd;
@@ -83,6 +86,9 @@ jmethodID mth_WmSetFocus_wmSetFocus;
 jclass cls_WmKillFocus;
 jmethodID mth_WmKillFocus_wmKillFocus;
 
+jclass cls_WmSetText;
+jmethodID mth_WmSetText_wmSetText;
+
 #define BEGIN_BIND_CLASS(vname, qname) \
 	cls_ ## vname = (*env)->FindClass(env, qname); \
 	if(cls_ ## vname) {
@@ -106,6 +112,9 @@ jmethodID mth_WmKillFocus_wmKillFocus;
 	ctor_ ## cvname = (*env)->GetMethodID(env, cls_ ## cvname, "<init>", type);
 
 JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env, jclass clazz) {
+	BEGIN_BIND_CLASS(Enum, "java/lang/Enum")
+		BIND_IMETHOD(Enum, ordinal, "()I")
+	END_BIND_CLASS(Enum)
 	BIND_UCLASS(HWnd)
 		BIND_FIELD(HWnd, handle, "J")
 		BIND_CTOR(HWnd, "(J)V")
@@ -189,6 +198,10 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	BIND_UCLASS(WmKillFocus)
 		BIND_IMETHOD(WmKillFocus, wmKillFocus, "(Lorg/unclesniper/winwin/HWnd;Lorg/unclesniper/winwin/HWnd;)V")
 	END_BIND_CLASS(WmKillFocus)
+	BIND_UCLASS(WmSetText)
+		BIND_IMETHOD(WmSetText, wmSetText, "(Lorg/unclesniper/winwin/HWnd;Ljava/lang/String;)"
+				"Lorg/unclesniper/winwin/WmSetText$SetTextResult;")
+	END_BIND_CLASS(WmSetText)
 	(*env)->GetJavaVM(env, &theJVM);
 	theHeap = GetProcessHeap();
 }

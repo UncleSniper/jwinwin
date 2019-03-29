@@ -1,4 +1,4 @@
-#include "global.h"
+#include "stringutils.h"
 
 #define BEGIN_VMESSAGE(mname) \
 	JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_ ## mname(JNIEnv *env, \
@@ -110,4 +110,30 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmKillFocus(JNI
 	else
 		ohwnd = NULL;
 	DefWindowProc(hwnd, WM_KILLFOCUS, (WPARAM)ohwnd, (LPARAM)0);
+}
+
+JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmSetTextImpl(JNIEnv *env,
+		jclass clazz, jlong hwnd, jstring text) {
+	WCHAR *chars;
+	LRESULT result;
+	chars = jstringToLPWSTR(env, text);
+	if(!chars)
+		return (jint)0;
+	result = DefWindowProc((HWND)hwnd, WM_SETTEXT, (WPARAM)0, (LPARAM)chars);
+	HeapFree(theHeap, (DWORD)0u, chars);
+	switch(result) {
+		case (LRESULT)FALSE:
+		default:
+			return (jint)0;
+		case (LRESULT)TRUE:
+			return (jint)1;
+		case (LRESULT)LB_ERRSPACE:
+			return (jint)2;
+#if LB_ERRSPACE != CB_ERRSPACE
+		case (LRESULT)CB_ERRSPACE:
+			return (jint)3;
+#endif
+		case (LRESULT)CB_ERR:
+			return (jint)4;
+	}
 }
