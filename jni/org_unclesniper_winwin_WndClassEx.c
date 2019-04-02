@@ -69,7 +69,7 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 					winwrap, shuntobj, (jint)lparam);
 			if((*env)->ExceptionCheck(env) != JNI_FALSE)
 				return (LRESULT)0;
-			icnhndl = getIconHandle(env, objresult);
+			icnhndl = objresult ? getIconHandle(env, objresult) : NULL;
 			if((*env)->ExceptionCheck(env) != JNI_FALSE)
 				return (LRESULT)0;
 			return (LRESULT)icnhndl;
