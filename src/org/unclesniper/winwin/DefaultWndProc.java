@@ -91,4 +91,9 @@ public class DefaultWndProc implements WndProc {
 		return DefWindowProc.wmGetTextLength(hwnd);
 	}
 
+	@Override
+	public boolean wmQueryEndSession(HWnd hwnd, int reason) {
+		return DefWindowProc.wmQueryEndSession(hwnd, reason);
+	}
+
 }

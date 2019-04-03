@@ -61,4 +61,6 @@ public final class DefWindowProc {
 
 	public static native int wmGetTextLength(HWnd hwnd);
 
+	public static native boolean wmQueryEndSession(HWnd hwnd, int reason);
+
 }

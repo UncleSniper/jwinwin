@@ -178,4 +178,40 @@ public class DebugWndProc implements WndProc {
 		}
 	}
 
+	@Override
+	public boolean wmQueryEndSession(HWnd hwnd, int reason) {
+		StringBuilder builder = new StringBuilder("WM_QUERYENDSESSION: ");
+		builder.append(DebugWndProc.hwndMsg(hwnd));
+		builder.append(", reason = ");
+		boolean first = true;
+		if((reason & WmQueryEndSession.ENDSESSION_CLOSEAPP) != 0) {
+			builder.append("ENDSESSION_CLOSEAPP");
+			first = false;
+		}
+		if((reason & WmQueryEndSession.ENDSESSION_CRITICAL) != 0) {
+			if(first)
+				first = false;
+			else
+				builder.append(" | ");
+			builder.append("ENDSESSION_CRITICAL");
+		}
+		if((reason & WmQueryEndSession.ENDSESSION_LOGOFF) != 0) {
+			if(first)
+				first = false;
+			else
+				builder.append(" | ");
+			builder.append("ENDSESSION_LOGOFF");
+		}
+		boolean allow;
+		if(slave != null) {
+			allow = slave.wmQueryEndSession(hwnd, reason);
+			builder.append(" => ");
+			builder.append(allow);
+		}
+		else
+			allow = true;
+		System.err.println(builder);
+		return allow;
+	}
+
 }

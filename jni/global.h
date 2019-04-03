@@ -99,6 +99,9 @@ extern jmethodID mth_WmGetText_wmGetText;
 extern jclass cls_WmGetTextLength;
 extern jmethodID mth_WmGetTextLength_wmGetTextLength;
 
+extern jclass cls_WmQueryEndSession;
+extern jmethodID mth_WmQueryEndSession_wmQueryEndSession;
+
 inline HWND getWndHandle(JNIEnv *env, jobject winwrap) {
 	return (HWND)(*env)->GetLongField(env, winwrap, fld_HWnd_handle);
 }

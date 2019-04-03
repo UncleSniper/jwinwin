@@ -10,6 +10,7 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 	const jchar *jstrchars;
 	HICON icnhndl;
 	int i;
+	jboolean jbool;
 	if((*theJVM)->GetEnv(theJVM, (void**)&env, JNI_VERSION_1_8) != JNI_OK)
 		return DefWindowProc(win, msg, wparam, lparam);
 	cbobj = (*env)->CallStaticObjectMethod(env, cls_HWnd, mth_HWnd_getWndProcByHandle, (jlong)win);
@@ -182,9 +183,18 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 			if((*env)->ExceptionCheck(env) != JNI_FALSE)
 				return (LRESULT)0;
 			intval = (*env)->CallIntMethod(env, cbobj, mth_WmGetTextLength_wmGetTextLength, winwrap);
-			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+			if((*env)->ExceptionCheck(env) != JNI_FALSE)
 				return (LRESULT)0;
 			return (LRESULT)intval;
+		case WM_QUERYENDSESSION:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) != JNI_FALSE)
+				return (LRESULT)TRUE;
+			jbool = (*env)->CallBooleanMethod(env, cbobj, mth_WmQueryEndSession_wmQueryEndSession,
+					winwrap, (jint)lparam);
+			if((*env)->ExceptionCheck(env) != JNI_FALSE)
+				return (LRESULT)TRUE;
+			return jbool == JNI_FALSE ? (LRESULT)FALSE : (LRESULT)TRUE;
 		default:
 			return DefWindowProc(win, msg, wparam, lparam);
 	}
