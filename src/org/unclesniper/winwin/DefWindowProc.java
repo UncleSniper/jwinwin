@@ -59,4 +59,6 @@ public final class DefWindowProc {
 
 	public static native String wmGetText(HWnd hwnd);
 
+	public static native int wmGetTextLength(HWnd hwnd);
+
 }

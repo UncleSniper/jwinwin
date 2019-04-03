@@ -16,5 +16,6 @@ public interface WndProc extends
 	WmSetFocus,
 	WmKillFocus,
 	WmSetText,
-	WmGetText
+	WmGetText,
+	WmGetTextLength
 	{}

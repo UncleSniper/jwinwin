@@ -177,6 +177,14 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 				((PWSTR)lparam)[i - 1] = (WCHAR)0;
 			(*env)->ReleaseStringChars(env, objresult, jstrchars);
 			return (LRESULT)i;
+		case WM_GETTEXTLENGTH:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) != JNI_FALSE)
+				return (LRESULT)0;
+			intval = (*env)->CallIntMethod(env, cbobj, mth_WmGetTextLength_wmGetTextLength, winwrap);
+			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+				return (LRESULT)0;
+			return (LRESULT)intval;
 		default:
 			return DefWindowProc(win, msg, wparam, lparam);
 	}

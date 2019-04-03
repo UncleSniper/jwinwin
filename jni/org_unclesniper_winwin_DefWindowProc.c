@@ -149,3 +149,12 @@ JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmGetText(JN
 	count = DefWindowProc(hwnd, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer);
 	return (*env)->NewString(env, (const jchar*)buffer, (jsize)count);
 }
+
+JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmGetTextLength(JNIEnv *env,
+		jclass clazz, jobject winwrap) {
+	HWND hwnd;
+	hwnd = getWndHandle(env, winwrap);
+	if(!hwnd)
+		return (jint)0;
+	return (jint)DefWindowProc(hwnd, WM_GETTEXTLENGTH, (WPARAM)0, (LPARAM)0);
+}

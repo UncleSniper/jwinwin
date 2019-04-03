@@ -135,6 +135,14 @@ JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmSetTextImpl
 JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmGetText
   (JNIEnv *, jclass, jobject);
 
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmGetTextLength
+ * Signature: (Lorg/unclesniper/winwin/HWnd;)I
+ */
+JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmGetTextLength
+  (JNIEnv *, jclass, jobject);
+
 #ifdef __cplusplus
 }
 #endif

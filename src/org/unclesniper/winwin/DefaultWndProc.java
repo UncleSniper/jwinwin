@@ -86,4 +86,9 @@ public class DefaultWndProc implements WndProc {
 		return DefWindowProc.wmGetText(hwnd);
 	}
 
+	@Override
+	public int wmGetTextLength(HWnd hwnd) {
+		return DefWindowProc.wmGetTextLength(hwnd);
+	}
+
 }

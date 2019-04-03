@@ -137,7 +137,7 @@ public class DebugWndProc implements WndProc {
 	@Override
 	public SetTextResult wmSetText(HWnd hwnd, String text) {
 		String prefix = "WM_SETTEXT: " + DebugWndProc.hwndMsg(hwnd) + ", text = \"" + text + '"';
-		if (slave != null) {
+		if(slave != null) {
 			SetTextResult result = slave.wmSetText(hwnd, text);
 			System.err.print(prefix + " => ");
 			System.err.println((result == null ? SetTextResult.FALSE : result).name());
@@ -152,7 +152,7 @@ public class DebugWndProc implements WndProc {
 	@Override
 	public String wmGetText(HWnd hwnd) {
 		String prefix = "WM_GETTEXT: " + DebugWndProc.hwndMsg(hwnd);
-		if (slave != null) {
+		if(slave != null) {
 			String text = slave.wmGetText(hwnd);
 			System.err.print(prefix + " => ");
 			System.err.println(text == null ? "NULL" : '"' + text + '"');
@@ -161,6 +161,20 @@ public class DebugWndProc implements WndProc {
 		else {
 			System.err.println(prefix);
 			return null;
+		}
+	}
+
+	@Override
+	public int wmGetTextLength(HWnd hwnd) {
+		String prefix = "WM_GETTEXTLENGTH: " + DebugWndProc.hwndMsg(hwnd);
+		if(slave != null) {
+			int length = slave.wmGetTextLength(hwnd);
+			System.err.println(prefix + " => " + length);
+			return length;
+		}
+		else {
+			System.err.println(prefix);
+			return 0;
 		}
 	}
 
