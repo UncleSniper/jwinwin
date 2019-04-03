@@ -16,6 +16,10 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 	cbobj = (*env)->CallStaticObjectMethod(env, cls_HWnd, mth_HWnd_getWndProcByHandle, (jlong)win);
 	if(!cbobj)
 		return DefWindowProc(win, msg, wparam, lparam);
+#define _wrapwin(defresult) \
+	winwrap = wrapWndHandle(env, win); \
+	if((*env)->ExceptionCheck(env) != JNI_FALSE) \
+		return (LRESULT)(defresult);
 	switch(msg) {
 		case WM_DESTROY:
 			(*env)->CallStaticVoidMethod(env, cls_HWnd, mth_HWnd_unregisterWndProc, (jlong)win);
@@ -26,46 +30,36 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 			}
 			return (LRESULT)0;
 		case WM_CLOSE:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) == JNI_FALSE)
-				(*env)->CallVoidMethod(env, cbobj, mth_WmClose_wmClose, winwrap);
+			_wrapwin(0)
+			(*env)->CallVoidMethod(env, cbobj, mth_WmClose_wmClose, winwrap);
 			return (LRESULT)0;
 		case WM_ACTIVATEAPP:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) == JNI_FALSE)
-				(*env)->CallVoidMethod(env, cbobj, mth_WmActivateApp_wmActivateApp,
-						winwrap, wparam ? JNI_TRUE : JNI_FALSE);
+			_wrapwin(0)
+			(*env)->CallVoidMethod(env, cbobj, mth_WmActivateApp_wmActivateApp,
+					winwrap, wparam ? JNI_TRUE : JNI_FALSE);
 			return (LRESULT)0;
 		case WM_CANCELMODE:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) == JNI_FALSE)
-				(*env)->CallVoidMethod(env, cbobj, mth_WmCancelMode_wmCancelMode, winwrap);
+			_wrapwin(0)
+			(*env)->CallVoidMethod(env, cbobj, mth_WmCancelMode_wmCancelMode, winwrap);
 			return (LRESULT)0;
 		case WM_CHILDACTIVATE:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) == JNI_FALSE)
-				(*env)->CallVoidMethod(env, cbobj, mth_WmChildActivate_wmChildActivate, winwrap);
+			_wrapwin(0)
+			(*env)->CallVoidMethod(env, cbobj, mth_WmChildActivate_wmChildActivate, winwrap);
 			return (LRESULT)0;
 		case WM_ENABLE:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) == JNI_FALSE)
-				(*env)->CallVoidMethod(env, cbobj, mth_WmEnable_wmEnable,
-						winwrap, wparam ? JNI_TRUE : JNI_FALSE);
+			_wrapwin(0)
+			(*env)->CallVoidMethod(env, cbobj, mth_WmEnable_wmEnable, winwrap, wparam ? JNI_TRUE : JNI_FALSE);
 			return (LRESULT)0;
 		case WM_ENTERSIZEMOVE:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) == JNI_FALSE)
-				(*env)->CallVoidMethod(env, cbobj, mth_WmEnterSizeMove_wmEnterSizeMove, winwrap);
+			_wrapwin(0)
+			(*env)->CallVoidMethod(env, cbobj, mth_WmEnterSizeMove_wmEnterSizeMove, winwrap);
 			return (LRESULT)0;
 		case WM_EXITSIZEMOVE:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) == JNI_FALSE)
-				(*env)->CallVoidMethod(env, cbobj, mth_WmExitSizeMove_wmExitSizeMove, winwrap);
+			_wrapwin(0)
+			(*env)->CallVoidMethod(env, cbobj, mth_WmExitSizeMove_wmExitSizeMove, winwrap);
 			return (LRESULT)0;
 		case WM_GETICON:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) != JNI_FALSE)
-				return (LRESULT)0;
+			_wrapwin(0)
 			shuntobj = (*env)->CallStaticObjectMethod(env, cls_WmGetIcon_GetIconType,
 					mth_WmGetIcon_GetIconType_byOrdinal, (jint)wparam);
 			if((*env)->ExceptionCheck(env) != JNI_FALSE)
@@ -79,15 +73,12 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 				return (LRESULT)0;
 			return (LRESULT)icnhndl;
 		case WM_MOVE:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) == JNI_FALSE)
-				(*env)->CallVoidMethod(env, cbobj, mth_WmMove_wmMove, winwrap,
-						(jint)(short)LOWORD(lparam), (jint)(short)HIWORD(lparam));
+			_wrapwin(0)
+			(*env)->CallVoidMethod(env, cbobj, mth_WmMove_wmMove, winwrap,
+					(jint)(short)LOWORD(lparam), (jint)(short)HIWORD(lparam));
 			return (LRESULT)0;
 		case WM_SIZE:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) != JNI_FALSE)
-				return (LRESULT)0;
+			_wrapwin(0)
 			shuntobj = (*env)->CallStaticObjectMethod(env, cls_WmSize_SizeType,
 					mth_WmSize_SizeType_byOrdinal, (jint)wparam);
 			if((*env)->ExceptionCheck(env) == JNI_FALSE)
@@ -95,9 +86,7 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 						(jint)(short)LOWORD(lparam), (jint)(short)HIWORD(lparam));
 			return (LRESULT)0;
 		case WM_ACTIVATE:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) != JNI_FALSE)
-				return (LRESULT)0;
+			_wrapwin(0)
 			if(lparam) {
 				otherwinwrap = wrapWndHandle(env, (HWND)lparam);
 				if((*env)->ExceptionCheck(env) != JNI_FALSE)
@@ -112,9 +101,7 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 						shuntobj, HIWORD(wparam) ? JNI_TRUE : JNI_FALSE);
 			return (LRESULT)0;
 		case WM_SETFOCUS:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) != JNI_FALSE)
-				return (LRESULT)0;
+			_wrapwin(0)
 			if(wparam) {
 				otherwinwrap = wrapWndHandle(env, (HWND)wparam);
 				if((*env)->ExceptionCheck(env) != JNI_FALSE)
@@ -125,9 +112,7 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 			(*env)->CallVoidMethod(env, cbobj, mth_WmSetFocus_wmSetFocus, winwrap, otherwinwrap);
 			return (LRESULT)0;
 		case WM_KILLFOCUS:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) != JNI_FALSE)
-				return (LRESULT)0;
+			_wrapwin(0)
 			if(wparam) {
 				otherwinwrap = wrapWndHandle(env, (HWND)wparam);
 				if((*env)->ExceptionCheck(env) != JNI_FALSE)
@@ -138,9 +123,7 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 			(*env)->CallVoidMethod(env, cbobj, mth_WmKillFocus_wmKillFocus, winwrap, otherwinwrap);
 			return (LRESULT)0;
 		case WM_SETTEXT:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) != JNI_FALSE)
-				return (LRESULT)FALSE;
+			_wrapwin(FALSE)
 			string = lpcwstrToJString(env, (LPCWSTR)lparam);
 			if(!string)
 				return (LRESULT)FALSE;
@@ -162,9 +145,7 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 					return (LRESULT)CB_ERR;
 			}
 		case WM_GETTEXT:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) != JNI_FALSE)
-				return (LRESULT)FALSE;
+			_wrapwin(0)
 			objresult = (*env)->CallObjectMethod(env, cbobj, mth_WmGetText_wmGetText, winwrap);
 			if(!objresult || (*env)->ExceptionCheck(env) != JNI_FALSE)
 				return (LRESULT)0;
@@ -179,22 +160,24 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 			(*env)->ReleaseStringChars(env, objresult, jstrchars);
 			return (LRESULT)i;
 		case WM_GETTEXTLENGTH:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) != JNI_FALSE)
-				return (LRESULT)0;
+			_wrapwin(0)
 			intval = (*env)->CallIntMethod(env, cbobj, mth_WmGetTextLength_wmGetTextLength, winwrap);
 			if((*env)->ExceptionCheck(env) != JNI_FALSE)
 				return (LRESULT)0;
 			return (LRESULT)intval;
 		case WM_QUERYENDSESSION:
-			winwrap = wrapWndHandle(env, win);
-			if((*env)->ExceptionCheck(env) != JNI_FALSE)
-				return (LRESULT)TRUE;
+			_wrapwin(TRUE)
 			jbool = (*env)->CallBooleanMethod(env, cbobj, mth_WmQueryEndSession_wmQueryEndSession,
 					winwrap, (jint)lparam);
 			if((*env)->ExceptionCheck(env) != JNI_FALSE)
 				return (LRESULT)TRUE;
 			return jbool == JNI_FALSE ? (LRESULT)FALSE : (LRESULT)TRUE;
+		case WM_ENDSESSION:
+			_wrapwin(0)
+			(*env)->CallVoidMethod(env, cbobj, mth_WmEndSession_wmEndSession, winwrap,
+					wparam ? JNI_TRUE : JNI_FALSE, (jint)lparam);
+			return (LRESULT)0;
+#undef _wrapwin
 		default:
 			return DefWindowProc(win, msg, wparam, lparam);
 	}

@@ -99,6 +99,9 @@ jmethodID mth_WmGetTextLength_wmGetTextLength;
 jclass cls_WmQueryEndSession;
 jmethodID mth_WmQueryEndSession_wmQueryEndSession;
 
+jclass cls_WmEndSession;
+jmethodID mth_WmEndSession_wmEndSession;
+
 #define BEGIN_BIND_CLASS(vname, qname) \
 	cls_ ## vname = (*env)->FindClass(env, qname); \
 	if(cls_ ## vname) {
@@ -221,6 +224,9 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	BIND_UCLASS(WmQueryEndSession)
 		BIND_IMETHOD(WmQueryEndSession, wmQueryEndSession, "(Lorg/unclesniper/winwin/HWnd;I)Z")
 	END_BIND_CLASS(WmQueryEndSession)
+	BIND_UCLASS(WmEndSession)
+		BIND_IMETHOD(WmEndSession, wmEndSession, "(Lorg/unclesniper/winwin/HWnd;ZI)V")
+	END_BIND_CLASS(WmEndSession)
 	(*env)->GetJavaVM(env, &theJVM);
 	theHeap = GetProcessHeap();
 }

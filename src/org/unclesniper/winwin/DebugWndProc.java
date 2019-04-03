@@ -178,11 +178,7 @@ public class DebugWndProc implements WndProc {
 		}
 	}
 
-	@Override
-	public boolean wmQueryEndSession(HWnd hwnd, int reason) {
-		StringBuilder builder = new StringBuilder("WM_QUERYENDSESSION: ");
-		builder.append(DebugWndProc.hwndMsg(hwnd));
-		builder.append(", reason = ");
+	private static void formatEndSessionReason(StringBuilder builder, int reason) {
 		boolean first = true;
 		if((reason & WmQueryEndSession.ENDSESSION_CLOSEAPP) != 0) {
 			builder.append("ENDSESSION_CLOSEAPP");
@@ -202,6 +198,16 @@ public class DebugWndProc implements WndProc {
 				builder.append(" | ");
 			builder.append("ENDSESSION_LOGOFF");
 		}
+		if(first)
+			builder.append('0');
+	}
+
+	@Override
+	public boolean wmQueryEndSession(HWnd hwnd, int reason) {
+		StringBuilder builder = new StringBuilder("WM_QUERYENDSESSION: ");
+		builder.append(DebugWndProc.hwndMsg(hwnd));
+		builder.append(", reason = ");
+		DebugWndProc.formatEndSessionReason(builder, reason);
 		boolean allow;
 		if(slave != null) {
 			allow = slave.wmQueryEndSession(hwnd, reason);
@@ -212,6 +218,19 @@ public class DebugWndProc implements WndProc {
 			allow = true;
 		System.err.println(builder);
 		return allow;
+	}
+
+	@Override
+	public void wmEndSession(HWnd hwnd, boolean ending, int reason) {
+		StringBuilder builder = new StringBuilder("WM_ENDSESSION: ");
+		builder.append(DebugWndProc.hwndMsg(hwnd));
+		builder.append(", ending = ");
+		builder.append(ending);
+		builder.append(", reason = ");
+		DebugWndProc.formatEndSessionReason(builder, reason);
+		System.err.println(builder);
+		if(slave != null)
+			slave.wmEndSession(hwnd, ending, reason);
 	}
 
 }

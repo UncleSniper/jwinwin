@@ -151,6 +151,14 @@ JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmGetTextLength
 JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmQueryEndSession
   (JNIEnv *, jclass, jobject, jint);
 
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmEndSession
+ * Signature: (Lorg/unclesniper/winwin/HWnd;ZI)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmEndSession
+  (JNIEnv *, jclass, jobject, jboolean, jint);
+
 #ifdef __cplusplus
 }
 #endif

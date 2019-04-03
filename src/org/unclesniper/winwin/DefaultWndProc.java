@@ -96,4 +96,9 @@ public class DefaultWndProc implements WndProc {
 		return DefWindowProc.wmQueryEndSession(hwnd, reason);
 	}
 
+	@Override
+	public void wmEndSession(HWnd hwnd, boolean ending, int reason) {
+		DefWindowProc.wmEndSession(hwnd, ending, reason);
+	}
+
 }

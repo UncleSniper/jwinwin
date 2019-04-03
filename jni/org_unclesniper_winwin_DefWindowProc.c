@@ -167,3 +167,11 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmQueryEndS
 		return JNI_FALSE;
 	return DefWindowProc(hwnd, WM_QUERYENDSESSION, (WPARAM)0, (LPARAM)reason) ? JNI_TRUE : JNI_FALSE;
 }
+
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmEndSession(JNIEnv *env,
+		jclass clazz, jobject winwrap, jboolean ending, jint reason) {
+	HWND hwnd;
+	hwnd = getWndHandle(env, winwrap);
+	if(hwnd)
+		DefWindowProc(hwnd, WM_ENDSESSION, (WPARAM)(ending == JNI_FALSE ? FALSE : TRUE), (LPARAM)reason);
+}

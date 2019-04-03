@@ -63,4 +63,6 @@ public final class DefWindowProc {
 
 	public static native boolean wmQueryEndSession(HWnd hwnd, int reason);
 
+	public static native void wmEndSession(HWnd hwnd, boolean ending, int reason);
+
 }
