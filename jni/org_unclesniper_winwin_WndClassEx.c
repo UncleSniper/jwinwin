@@ -1,3 +1,5 @@
+#include <shlwapi.h>
+
 #include "stringutils.h"
 
 static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM lparam) {
@@ -5,7 +7,9 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 	jobject cbobj, winwrap, objresult, shuntobj, otherwinwrap;
 	jstring string;
 	jint intval;
+	const jchar *jstrchars;
 	HICON icnhndl;
+	int i;
 	if((*theJVM)->GetEnv(theJVM, (void**)&env, JNI_VERSION_1_8) != JNI_OK)
 		return DefWindowProc(win, msg, wparam, lparam);
 	cbobj = (*env)->CallStaticObjectMethod(env, cls_HWnd, mth_HWnd_getWndProcByHandle, (jlong)win);
@@ -156,6 +160,23 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 				case 4:
 					return (LRESULT)CB_ERR;
 			}
+		case WM_GETTEXT:
+			winwrap = wrapWndHandle(env, win);
+			if((*env)->ExceptionCheck(env) != JNI_FALSE)
+				return (LRESULT)FALSE;
+			objresult = (*env)->CallObjectMethod(env, cbobj, mth_WmGetText_wmGetText, winwrap);
+			if(!objresult || (*env)->ExceptionCheck(env) != JNI_FALSE)
+				return (LRESULT)0;
+			i = (int)(*env)->GetStringLength(env, objresult) + 1;
+			if((WPARAM)i > wparam)
+				i = (int)wparam;
+			jstrchars = (*env)->GetStringChars(env, objresult, NULL);
+			if(i > 1)
+				StrCpyNW((PWSTR)lparam, (PCWSTR)jstrchars, i - 1);
+			if(i)
+				((PWSTR)lparam)[i - 1] = (WCHAR)0;
+			(*env)->ReleaseStringChars(env, objresult, jstrchars);
+			return (LRESULT)i;
 		default:
 			return DefWindowProc(win, msg, wparam, lparam);
 	}

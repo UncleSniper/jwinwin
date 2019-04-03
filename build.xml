@@ -96,6 +96,7 @@
 			<arg value="${jni.dir}/org_unclesniper_winwin_WndClassEx.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_DefWindowProc.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_Msg.c"/>
+			<arg value="-lshlwapi"/>
 		</exec>
 	</target>
 

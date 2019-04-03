@@ -81,4 +81,9 @@ public class DefaultWndProc implements WndProc {
 		return DefWindowProc.wmSetText(hwnd, text);
 	}
 
+	@Override
+	public String wmGetText(HWnd hwnd) {
+		return DefWindowProc.wmGetText(hwnd);
+	}
+
 }

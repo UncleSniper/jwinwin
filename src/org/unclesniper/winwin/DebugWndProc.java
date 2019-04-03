@@ -136,11 +136,32 @@ public class DebugWndProc implements WndProc {
 
 	@Override
 	public SetTextResult wmSetText(HWnd hwnd, String text) {
-		System.err.println("WM_SETFOCUS: " + DebugWndProc.hwndMsg(hwnd) + ", text = \"" + text + '"');
-		if (slave != null)
-			return slave.wmSetText(hwnd, text);
-		else
+		String prefix = "WM_SETTEXT: " + DebugWndProc.hwndMsg(hwnd) + ", text = \"" + text + '"';
+		if (slave != null) {
+			SetTextResult result = slave.wmSetText(hwnd, text);
+			System.err.print(prefix + " => ");
+			System.err.println((result == null ? SetTextResult.FALSE : result).name());
+			return result;
+		}
+		else {
+			System.err.println(prefix);
 			return SetTextResult.FALSE;
+		}
+	}
+
+	@Override
+	public String wmGetText(HWnd hwnd) {
+		String prefix = "WM_GETTEXT: " + DebugWndProc.hwndMsg(hwnd);
+		if (slave != null) {
+			String text = slave.wmGetText(hwnd);
+			System.err.print(prefix + " => ");
+			System.err.println(text == null ? "NULL" : '"' + text + '"');
+			return text;
+		}
+		else {
+			System.err.println(prefix);
+			return null;
+		}
 	}
 
 }

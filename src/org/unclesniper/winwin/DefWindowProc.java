@@ -57,4 +57,6 @@ public final class DefWindowProc {
 
 	private static native int wmSetTextImpl(long hwnd, String text);
 
+	public static native String wmGetText(HWnd hwnd);
+
 }

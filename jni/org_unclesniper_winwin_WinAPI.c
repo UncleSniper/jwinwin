@@ -90,6 +90,9 @@ jmethodID mth_WmKillFocus_wmKillFocus;
 jclass cls_WmSetText;
 jmethodID mth_WmSetText_wmSetText;
 
+jclass cls_WmGetText;
+jmethodID mth_WmGetText_wmGetText;
+
 #define BEGIN_BIND_CLASS(vname, qname) \
 	cls_ ## vname = (*env)->FindClass(env, qname); \
 	if(cls_ ## vname) {
@@ -203,6 +206,9 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 		BIND_IMETHOD(WmSetText, wmSetText, "(Lorg/unclesniper/winwin/HWnd;Ljava/lang/String;)"
 				"Lorg/unclesniper/winwin/WmSetText$SetTextResult;")
 	END_BIND_CLASS(WmSetText)
+	BIND_UCLASS(WmGetText)
+		BIND_IMETHOD(WmGetText, wmGetText, "(Lorg/unclesniper/winwin/HWnd;)Ljava/lang/String;")
+	END_BIND_CLASS(WmGetText)
 	(*env)->GetJavaVM(env, &theJVM);
 	theHeap = GetProcessHeap();
 }
