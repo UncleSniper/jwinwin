@@ -16,3 +16,7 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_Msg_pumpAll(JNIEnv *env, jcla
 		DispatchMessage(&msg);
 	}
 }
+
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_Msg_postQuitMessage(JNIEnv *env, jclass clazz, jint status) {
+	PostQuitMessage((int)status);
+}

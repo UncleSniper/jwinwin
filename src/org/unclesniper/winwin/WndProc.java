@@ -19,5 +19,6 @@ public interface WndProc extends
 	WmGetText,
 	WmGetTextLength,
 	WmQueryEndSession,
-	WmEndSession
+	WmEndSession,
+	WmWineventReceived
 	{}

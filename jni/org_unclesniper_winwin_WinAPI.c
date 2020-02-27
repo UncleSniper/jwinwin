@@ -2,12 +2,16 @@
 #include <string.h>
 #include <windows.h>
 
+#include "hashtable.h"
+
 HANDLE theHeap;
 
 JavaVM *theJVM = NULL;
 
 jclass cls_Enum;
 jmethodID mth_Enum_ordinal;
+
+jclass cls_OutOfMemoryError;
 
 jclass cls_HWnd;
 jfieldID fld_HWnd_handle;
@@ -38,6 +42,13 @@ jclass cls_HMenu;
 jfieldID fld_HMenu_handle;
 
 jclass cls_WndProc;
+
+jclass cls_HWinEventHook;
+jclass cls_HWinEventHook_ObjID;
+jmethodID mth_HWinEventHook_ObjID_byOrdinal;
+
+jclass cls_WinEvent;
+jmethodID ctor_WinEvent;
 
 jclass cls_WmDestroy;
 jmethodID mth_WmDestroy_wmDestroy;
@@ -102,6 +113,12 @@ jmethodID mth_WmQueryEndSession_wmQueryEndSession;
 jclass cls_WmEndSession;
 jmethodID mth_WmEndSession_wmEndSession;
 
+jclass cls_WmWineventReceived;
+jmethodID mth_WmWineventReceived_wmWineventReceived;
+
+jclass cls_WndEnumProc;
+jmethodID mth_WndEnumProc_foundWindow;
+
 #define BEGIN_BIND_CLASS(vname, qname) \
 	cls_ ## vname = (*env)->FindClass(env, qname); \
 	if(cls_ ## vname) {
@@ -128,6 +145,8 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	BEGIN_BIND_CLASS(Enum, "java/lang/Enum")
 		BIND_IMETHOD(Enum, ordinal, "()I")
 	END_BIND_CLASS(Enum)
+	BEGIN_BIND_CLASS(OutOfMemoryError, "java/lang/OutOfMemoryError")
+	END_BIND_CLASS(OutOfMemoryError)
 	BIND_UCLASS(HWnd)
 		BIND_FIELD(HWnd, handle, "J")
 		BIND_CTOR(HWnd, "(J)V")
@@ -158,6 +177,14 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	END_BIND_CLASS(HMenu)
 	BIND_UCLASS(WndProc)
 	END_BIND_CLASS(WndProc)
+	BIND_UCLASS(HWinEventHook)
+	END_BIND_CLASS(HWinEventHook)
+	BIND_UNCLASS(HWinEventHook, ObjID)
+		BIND_SMETHOD(HWinEventHook_ObjID, byOrdinal, "(I)Lorg/unclesniper/winwin/HWinEventHook$ObjID;")
+	END_BIND_CLASS(HWinEventHook_ObjID)
+	BIND_UCLASS(WinEvent)
+		BIND_CTOR(WinEvent, "(ILorg/unclesniper/winwin/HWnd;Lorg/unclesniper/winwin/HWinEventHook$ObjID;JJ)V")
+	END_BIND_CLASS(WinEvent)
 	BIND_UCLASS(WmDestroy)
 		BIND_IMETHOD(WmDestroy, wmDestroy, "(Lorg/unclesniper/winwin/HWnd;)V")
 	END_BIND_CLASS(WmDestroy)
@@ -227,6 +254,17 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	BIND_UCLASS(WmEndSession)
 		BIND_IMETHOD(WmEndSession, wmEndSession, "(Lorg/unclesniper/winwin/HWnd;ZI)V")
 	END_BIND_CLASS(WmEndSession)
+	BIND_UCLASS(WmWineventReceived)
+		BIND_IMETHOD(WmWineventReceived, wmWineventReceived,
+				"(Lorg/unclesniper/winwin/HWnd;Lorg/unclesniper/winwin/WinEvent;J)V")
+	END_BIND_CLASS(WmWineventReceived)
+	BIND_UCLASS(WndEnumProc)
+		BIND_IMETHOD(WndEnumProc, foundWindow, "(Lorg/unclesniper/winwin/HWnd;)Z")
+	END_BIND_CLASS(WndEnumProc)
+	if(!init_hashtable(&winevent_hashtable, 97u)) {
+		(*env)->ThrowNew(env, cls_OutOfMemoryError, "Not enough memory for WinEvent hashtable");
+		return;
+	}
 	(*env)->GetJavaVM(env, &theJVM);
 	theHeap = GetProcessHeap();
 }

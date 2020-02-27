@@ -7,6 +7,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef org_unclesniper_winwin_Msg_NATIVE_WM_USER
+#define org_unclesniper_winwin_Msg_NATIVE_WM_USER 1024L
+#undef org_unclesniper_winwin_Msg_WM_WINEVENT_RECEIVED
+#define org_unclesniper_winwin_Msg_WM_WINEVENT_RECEIVED 1024L
+#undef org_unclesniper_winwin_Msg_WM_USER
+#define org_unclesniper_winwin_Msg_WM_USER 1025L
 /*
  * Class:     org_unclesniper_winwin_Msg
  * Method:    pumpOne
@@ -22,6 +28,14 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_Msg_pumpOne
  */
 JNIEXPORT void JNICALL Java_org_unclesniper_winwin_Msg_pumpAll
   (JNIEnv *, jclass);
+
+/*
+ * Class:     org_unclesniper_winwin_Msg
+ * Method:    postQuitMessage
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_Msg_postQuitMessage
+  (JNIEnv *, jclass, jint);
 
 #ifdef __cplusplus
 }

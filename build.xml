@@ -77,6 +77,8 @@
 			<arg value="org.unclesniper.winwin.WndClassEx"/>
 			<arg value="org.unclesniper.winwin.DefWindowProc"/>
 			<arg value="org.unclesniper.winwin.Msg"/>
+			<arg value="org.unclesniper.winwin.HWinEventHook"/>
+			<arg value="org.unclesniper.winwin.WinEvent"/>
 		</exec>
 	</target>
 
@@ -90,12 +92,15 @@
 			<arg value="-O2"/>
 			<arg line="-Wall -Wextra -pedantic -Wno-unused-parameter"/>
 			<arg value="-DUNICODE"/>
+			<arg value="${jni.dir}/global.c"/>
+			<arg value="${jni.dir}/hashtable.c"/>
 			<arg value="${jni.dir}/stringutils.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_WinAPI.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_HWnd.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_WndClassEx.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_DefWindowProc.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_Msg.c"/>
+			<arg value="${jni.dir}/org_unclesniper_winwin_HWinEventHook.c"/>
 			<arg value="-lshlwapi"/>
 		</exec>
 	</target>

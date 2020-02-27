@@ -12,6 +12,8 @@ extern JavaVM *theJVM;
 extern jclass cls_Enum;
 extern jmethodID mth_Enum_ordinal;
 
+extern jclass cls_OutOfMemoryError;
+
 extern jclass cls_HWnd;
 extern jfieldID fld_HWnd_handle;
 extern jmethodID ctor_HWnd;
@@ -41,6 +43,13 @@ extern jclass cls_HMenu;
 extern jfieldID fld_HMenu_handle;
 
 extern jclass cls_WndProc;
+
+extern jclass cls_HWinEventHook;
+extern jclass cls_HWinEventHook_ObjID;
+extern jmethodID mth_HWinEventHook_ObjID_byOrdinal;
+
+extern jclass cls_WinEvent;
+extern jmethodID ctor_WinEvent;
 
 extern jclass cls_WmDestroy;
 extern jmethodID mth_WmDestroy_wmDestroy;
@@ -105,24 +114,20 @@ extern jmethodID mth_WmQueryEndSession_wmQueryEndSession;
 extern jclass cls_WmEndSession;
 extern jmethodID mth_WmEndSession_wmEndSession;
 
-inline HWND getWndHandle(JNIEnv *env, jobject winwrap) {
-	return (HWND)(*env)->GetLongField(env, winwrap, fld_HWnd_handle);
-}
+extern jclass cls_WmWineventReceived;
+extern jmethodID mth_WmWineventReceived_wmWineventReceived;
 
-inline HICON getIconHandle(JNIEnv *env, jobject iconwrap) {
-	return (HICON)(*env)->GetLongField(env, iconwrap, fld_HIcon_handle);
-}
+extern jclass cls_WndEnumProc;
+extern jmethodID mth_WndEnumProc_foundWindow;
 
-inline HCURSOR getCursorHandle(JNIEnv *env, jobject curwrap) {
-	return (HCURSOR)(*env)->GetLongField(env, curwrap, fld_HCursor_handle);
-}
+HWND getWndHandle(JNIEnv *env, jobject winwrap);
 
-inline HBRUSH getBrushHandle(JNIEnv *env, jobject brshwrap) {
-	return (HBRUSH)(*env)->GetLongField(env, brshwrap, fld_HBrush_handle);
-}
+HICON getIconHandle(JNIEnv *env, jobject iconwrap);
 
-inline jobject wrapWndHandle(JNIEnv *env, HWND handle) {
-	return (*env)->NewObject(env, cls_HWnd, ctor_HWnd, (jlong)handle);
-}
+HCURSOR getCursorHandle(JNIEnv *env, jobject curwrap);
+
+HBRUSH getBrushHandle(JNIEnv *env, jobject brshwrap);
+
+jobject wrapWndHandle(JNIEnv *env, HWND handle);
 
 #endif /* JWINWIN_JNI_GLOBAL_H */

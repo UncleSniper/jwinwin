@@ -137,6 +137,30 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_showWindowImpl
 
 /*
  * Class:     org_unclesniper_winwin_HWnd
+ * Method:    getWindowTextImpl
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_HWnd_getWindowTextImpl
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_HWnd
+ * Method:    getClassNameImpl
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_HWnd_getClassNameImpl
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_HWnd
+ * Method:    setWinEventHookImpl
+ * Signature: (JIII)J
+ */
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_setWinEventHookImpl
+  (JNIEnv *, jclass, jlong, jint, jint, jint);
+
+/*
+ * Class:     org_unclesniper_winwin_HWnd
  * Method:    createWindowExByClassAtom
  * Signature: (IILjava/lang/String;IIIIIJJ)J
  */
@@ -150,6 +174,30 @@ JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_createWindowExByClassAt
  */
 JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_createWindowExByClassName
   (JNIEnv *, jclass, jint, jstring, jstring, jint, jint, jint, jint, jint, jlong, jlong);
+
+/*
+ * Class:     org_unclesniper_winwin_HWnd
+ * Method:    enumWindowsImpl
+ * Signature: (Lorg/unclesniper/winwin/WndEnumProc;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_enumWindowsImpl
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_HWnd
+ * Method:    getForegroundWindowImpl
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_getForegroundWindowImpl
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_unclesniper_winwin_HWnd
+ * Method:    setForegroundWindowImpl
+ * Signature: (JZ)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_setForegroundWindowImpl
+  (JNIEnv *, jclass, jlong, jboolean);
 
 #ifdef __cplusplus
 }

@@ -105,6 +105,8 @@ public final class HWnd {
 
 	private static final Map<Long, WndProc> KNOWN_WNDPROCS = new ConcurrentHashMap<Long, WndProc>();
 
+	static final Object WINEVENT_HOOK_LOCK = new Object();
+
 	private final long handle;
 
 	HWnd(long handle) {
@@ -121,6 +123,19 @@ public final class HWnd {
 		return handle;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof HWnd))
+			return false;
+		return handle == ((HWnd)other).handle;
+	}
+
+	@Override
+	public int hashCode() {
+		int hi = (int)(handle >> 32), lo = (int)handle;
+		return ((hi << 13) | (hi >> 19)) ^ lo;
+	}
+
 	public native int closeWindow();
 
 	public boolean showWindow(ShowWindow nCmdShow) {
@@ -128,6 +143,50 @@ public final class HWnd {
 	}
 
 	private native boolean showWindowImpl(int nCmdShow);
+
+	public String getWindowText() {
+		String text = getWindowTextImpl();
+		if(text != null)
+			return text;
+		int error = WinAPI.getLastError();
+		if(error != 0)
+			throw new WindowsException("Failed to retrieve window text", error);
+		return "";
+	}
+
+	private native String getWindowTextImpl();
+
+	public String getClassName() {
+		String name = getClassNameImpl();
+		if(name != null)
+			return name;
+		int error = WinAPI.getLastError();
+		if(error != 0)
+			throw new WindowsException("Failed to retrieve window class name", error);
+		return "";
+	}
+
+	private native String getClassNameImpl();
+
+	public HWinEventHook setWinEventHook(int eventMin, int eventMax, int flags) {
+		if(eventMin < HWinEventHook.EVENT_MIN || eventMin > HWinEventHook.EVENT_MAX)
+			throw new IllegalArgumentException("Minimal event out of bounds: " + eventMin);
+		if(eventMax < HWinEventHook.EVENT_MIN || eventMax > HWinEventHook.EVENT_MAX)
+			throw new IllegalArgumentException("Maximal event out of bounds: " + eventMin);
+		if(eventMax <= eventMin)
+			throw new IllegalArgumentException("Event range is empty: " + eventMin + " >= " + eventMax);
+		if(!HWnd.KNOWN_WNDPROCS.containsKey(handle))
+			throw new IllegalArgumentException("Cannot use foreign HWnd as WinEvent recipient");
+		long hook;
+		synchronized(HWnd.WINEVENT_HOOK_LOCK) {
+			hook = HWnd.setWinEventHookImpl(handle, eventMin, eventMax, flags);
+		}
+		if(hook == 0l)
+			throw new WindowsException("Failed to set WinEvent hook");
+		return new HWinEventHook(hook);
+	}
+
+	private static native long setWinEventHookImpl(long recipient, int eventMin, int eventMax, int flags);
 
 	public static HWnd createWindowEx(int dwExStyle, ClassAtom lpClassName, String lpWindowName,
 			int dwStyle, int x, int y, int nWidth, int nHeight, HWnd hWndParent, HMenu hMenu) {
@@ -167,6 +226,33 @@ public final class HWnd {
 	private static void unregisterWndProc(long handle) {
 		HWnd.KNOWN_WNDPROCS.remove(handle);
 	}
+
+	public static boolean enumWindows(WndEnumProc callback) {
+		if(callback == null)
+			throw new IllegalArgumentException("Callback cannot be null");
+		boolean result = HWnd.enumWindowsImpl(callback);
+		if(result)
+			return true;
+		int error = WinAPI.getLastError();
+		if(error == 0)
+			return false;
+		throw new WindowsException("Failed to enumerate windows", error);
+	}
+
+	private static native boolean enumWindowsImpl(WndEnumProc callback);
+
+	public static HWnd getForegroundWindow() {
+		long win = HWnd.getForegroundWindowImpl();
+		return win == 0l ? null : new HWnd(win);
+	}
+
+	private static native long getForegroundWindowImpl();
+
+	public static boolean setForegroundWindow(HWnd hwnd, boolean force) {
+		return HWnd.setForegroundWindowImpl(hwnd == null ? 0l : hwnd.handle, force);
+	}
+
+	private static native boolean setForegroundWindowImpl(long handle, boolean force);
 
 	public static void main(String[] args) {
 		new WndClassEx(new DebugWndProc(new DefaultWndProc())).withBackground(WinAPI.COLOR_WINDOW)
