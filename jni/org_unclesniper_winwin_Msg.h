@@ -9,10 +9,10 @@ extern "C" {
 #endif
 #undef org_unclesniper_winwin_Msg_NATIVE_WM_USER
 #define org_unclesniper_winwin_Msg_NATIVE_WM_USER 1024L
-#undef org_unclesniper_winwin_Msg_WM_WINEVENT_RECEIVED
-#define org_unclesniper_winwin_Msg_WM_WINEVENT_RECEIVED 1024L
+#undef org_unclesniper_winwin_Msg_WM_UNBLOCK_GETMESSAGE
+#define org_unclesniper_winwin_Msg_WM_UNBLOCK_GETMESSAGE 1024L
 #undef org_unclesniper_winwin_Msg_WM_USER
-#define org_unclesniper_winwin_Msg_WM_USER 1025L
+#define org_unclesniper_winwin_Msg_WM_USER 1024L
 /*
  * Class:     org_unclesniper_winwin_Msg
  * Method:    pumpOne

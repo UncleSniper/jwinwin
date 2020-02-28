@@ -1,5 +1,8 @@
 package org.unclesniper.winwin;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public final class HWinEventHook {
 
 	static {
@@ -108,6 +111,8 @@ public final class HWinEventHook {
 	public static final int EVENT_UIA_PROPID_START                        = 0x00007500;
 	public static final int EVENT_UIA_PROPID_END                          = 0x000075FF;
 
+	private static final Map<Long, WinEventProc> KNOWN_WINEVTPROCS = new ConcurrentHashMap<Long, WinEventProc>();
+
 	private final long handle;
 
 	HWinEventHook(long handle) {
@@ -132,12 +137,33 @@ public final class HWinEventHook {
 	}
 
 	public void unhookWinEvent() {
-		synchronized(HWnd.WINEVENT_HOOK_LOCK) {
-			if(!HWinEventHook.unhookWinEventImpl(handle))
-				throw new WindowsException("Failed to unhook WinEvent");
-		}
+		if(!HWinEventHook.unhookWinEventImpl(handle))
+			throw new WindowsException("Failed to unhook WinEvent");
+		HWinEventHook.KNOWN_WINEVTPROCS.remove(handle);
 	}
 
 	private static native boolean unhookWinEventImpl(long handle);
+
+	private static WinEventProc getWinEventProcByHandle(long handle) {
+		return HWinEventHook.KNOWN_WINEVTPROCS.get(handle);
+	}
+
+	public static HWinEventHook setWinEventHook(int eventMin, int eventMax, int flags, WinEventProc callback) {
+		if(eventMin < HWinEventHook.EVENT_MIN || eventMin > HWinEventHook.EVENT_MAX)
+			throw new IllegalArgumentException("Minimal event out of bounds: " + eventMin);
+		if(eventMax < HWinEventHook.EVENT_MIN || eventMax > HWinEventHook.EVENT_MAX)
+			throw new IllegalArgumentException("Maximal event out of bounds: " + eventMin);
+		if(eventMax <= eventMin)
+			throw new IllegalArgumentException("Event range is empty: " + eventMin + " >= " + eventMax);
+		if(callback == null)
+			throw new IllegalArgumentException("WinEventProc must not be null");
+		long hook = HWinEventHook.setWinEventHookImpl(eventMin, eventMax, flags);
+		if(hook == 0l)
+			throw new WindowsException("Failed to set WinEvent hook");
+		HWinEventHook.KNOWN_WINEVTPROCS.put(hook, callback);
+		return new HWinEventHook(hook);
+	}
+
+	private static native long setWinEventHookImpl(int eventMin, int eventMax, int flags);
 
 }

@@ -15,8 +15,6 @@ typedef struct hashtable_t {
 	hashnode_t *pending_deletion;
 } hashtable_t;
 
-extern hashtable_t winevent_hashtable;
-
 int init_hashtable(hashtable_t *table, unsigned modulus);
 int put_hashtable(hashtable_t *table, jlong key, jlong value);
 int get_hashtable(hashtable_t *table, jlong key, jlong *value);

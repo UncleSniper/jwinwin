@@ -105,8 +105,6 @@ public final class HWnd {
 
 	private static final Map<Long, WndProc> KNOWN_WNDPROCS = new ConcurrentHashMap<Long, WndProc>();
 
-	static final Object WINEVENT_HOOK_LOCK = new Object();
-
 	private final long handle;
 
 	HWnd(long handle) {
@@ -167,26 +165,6 @@ public final class HWnd {
 	}
 
 	private native String getClassNameImpl();
-
-	public HWinEventHook setWinEventHook(int eventMin, int eventMax, int flags) {
-		if(eventMin < HWinEventHook.EVENT_MIN || eventMin > HWinEventHook.EVENT_MAX)
-			throw new IllegalArgumentException("Minimal event out of bounds: " + eventMin);
-		if(eventMax < HWinEventHook.EVENT_MIN || eventMax > HWinEventHook.EVENT_MAX)
-			throw new IllegalArgumentException("Maximal event out of bounds: " + eventMin);
-		if(eventMax <= eventMin)
-			throw new IllegalArgumentException("Event range is empty: " + eventMin + " >= " + eventMax);
-		if(!HWnd.KNOWN_WNDPROCS.containsKey(handle))
-			throw new IllegalArgumentException("Cannot use foreign HWnd as WinEvent recipient");
-		long hook;
-		synchronized(HWnd.WINEVENT_HOOK_LOCK) {
-			hook = HWnd.setWinEventHookImpl(handle, eventMin, eventMax, flags);
-		}
-		if(hook == 0l)
-			throw new WindowsException("Failed to set WinEvent hook");
-		return new HWinEventHook(hook);
-	}
-
-	private static native long setWinEventHookImpl(long recipient, int eventMin, int eventMax, int flags);
 
 	public static HWnd createWindowEx(int dwExStyle, ClassAtom lpClassName, String lpWindowName,
 			int dwStyle, int x, int y, int nWidth, int nHeight, HWnd hWndParent, HMenu hMenu) {

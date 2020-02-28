@@ -2,8 +2,6 @@
 #include <string.h>
 #include <windows.h>
 
-#include "hashtable.h"
-
 HANDLE theHeap;
 
 JavaVM *theJVM = NULL;
@@ -44,11 +42,23 @@ jfieldID fld_HMenu_handle;
 jclass cls_WndProc;
 
 jclass cls_HWinEventHook;
-jclass cls_HWinEventHook_ObjID;
-jmethodID mth_HWinEventHook_ObjID_byOrdinal;
+jmethodID mth_HWinEventHook_getWinEventProcByHandle;
 
-jclass cls_WinEvent;
-jmethodID ctor_WinEvent;
+jclass cls_WinEventProc;
+jmethodID mth_WinEventProc_windowCloaked;
+jmethodID mth_WinEventProc_windowCreate;
+jmethodID mth_WinEventProc_windowDestroy;
+jmethodID mth_WinEventProc_windowFocus;
+jmethodID mth_WinEventProc_windowNameChange;
+jmethodID mth_WinEventProc_windowReorder;
+jmethodID mth_WinEventProc_windowShow;
+jmethodID mth_WinEventProc_windowUncloaked;
+jmethodID mth_WinEventProc_desktopSwitch;
+jmethodID mth_WinEventProc_foreground;
+jmethodID mth_WinEventProc_windowMinimizeEnd;
+jmethodID mth_WinEventProc_windowMinimizeStart;
+jmethodID mth_WinEventProc_windowMoveSizeEnd;
+jmethodID mth_WinEventProc_windowMoveSizeStart;
 
 jclass cls_WmDestroy;
 jmethodID mth_WmDestroy_wmDestroy;
@@ -113,9 +123,6 @@ jmethodID mth_WmQueryEndSession_wmQueryEndSession;
 jclass cls_WmEndSession;
 jmethodID mth_WmEndSession_wmEndSession;
 
-jclass cls_WmWineventReceived;
-jmethodID mth_WmWineventReceived_wmWineventReceived;
-
 jclass cls_WndEnumProc;
 jmethodID mth_WndEnumProc_foundWindow;
 
@@ -178,13 +185,24 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	BIND_UCLASS(WndProc)
 	END_BIND_CLASS(WndProc)
 	BIND_UCLASS(HWinEventHook)
+		BIND_SMETHOD(HWinEventHook, getWinEventProcByHandle, "(J)Lorg/unclesniper/winwin/WinEventProc;")
 	END_BIND_CLASS(HWinEventHook)
-	BIND_UNCLASS(HWinEventHook, ObjID)
-		BIND_SMETHOD(HWinEventHook_ObjID, byOrdinal, "(I)Lorg/unclesniper/winwin/HWinEventHook$ObjID;")
-	END_BIND_CLASS(HWinEventHook_ObjID)
-	BIND_UCLASS(WinEvent)
-		BIND_CTOR(WinEvent, "(ILorg/unclesniper/winwin/HWnd;Lorg/unclesniper/winwin/HWinEventHook$ObjID;JJ)V")
-	END_BIND_CLASS(WinEvent)
+	BIND_UCLASS(WinEventProc)
+		BIND_IMETHOD(WinEventProc, windowCloaked, "(Lorg/unclesniper/winwin/HWnd;J)V")
+		BIND_IMETHOD(WinEventProc, windowCreate, "(Lorg/unclesniper/winwin/HWnd;J)V")
+		BIND_IMETHOD(WinEventProc, windowDestroy, "(Lorg/unclesniper/winwin/HWnd;J)V")
+		BIND_IMETHOD(WinEventProc, windowFocus, "(Lorg/unclesniper/winwin/HWnd;J)V")
+		BIND_IMETHOD(WinEventProc, windowNameChange, "(Lorg/unclesniper/winwin/HWnd;J)V")
+		BIND_IMETHOD(WinEventProc, windowReorder, "(Lorg/unclesniper/winwin/HWnd;J)V")
+		BIND_IMETHOD(WinEventProc, windowShow, "(Lorg/unclesniper/winwin/HWnd;J)V")
+		BIND_IMETHOD(WinEventProc, windowUncloaked, "(Lorg/unclesniper/winwin/HWnd;J)V")
+		BIND_IMETHOD(WinEventProc, desktopSwitch, "(J)V")
+		BIND_IMETHOD(WinEventProc, foreground, "(Lorg/unclesniper/winwin/HWnd;)V")
+		BIND_IMETHOD(WinEventProc, windowMinimizeEnd, "(Lorg/unclesniper/winwin/HWnd;)V")
+		BIND_IMETHOD(WinEventProc, windowMinimizeStart, "(Lorg/unclesniper/winwin/HWnd;)V")
+		BIND_IMETHOD(WinEventProc, windowMoveSizeEnd, "(Lorg/unclesniper/winwin/HWnd;)V")
+		BIND_IMETHOD(WinEventProc, windowMoveSizeStart, "(Lorg/unclesniper/winwin/HWnd;)V")
+	END_BIND_CLASS(WinEventProc)
 	BIND_UCLASS(WmDestroy)
 		BIND_IMETHOD(WmDestroy, wmDestroy, "(Lorg/unclesniper/winwin/HWnd;)V")
 	END_BIND_CLASS(WmDestroy)
@@ -254,17 +272,9 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	BIND_UCLASS(WmEndSession)
 		BIND_IMETHOD(WmEndSession, wmEndSession, "(Lorg/unclesniper/winwin/HWnd;ZI)V")
 	END_BIND_CLASS(WmEndSession)
-	BIND_UCLASS(WmWineventReceived)
-		BIND_IMETHOD(WmWineventReceived, wmWineventReceived,
-				"(Lorg/unclesniper/winwin/HWnd;Lorg/unclesniper/winwin/WinEvent;J)V")
-	END_BIND_CLASS(WmWineventReceived)
 	BIND_UCLASS(WndEnumProc)
 		BIND_IMETHOD(WndEnumProc, foundWindow, "(Lorg/unclesniper/winwin/HWnd;)Z")
 	END_BIND_CLASS(WndEnumProc)
-	if(!init_hashtable(&winevent_hashtable, 97u)) {
-		(*env)->ThrowNew(env, cls_OutOfMemoryError, "Not enough memory for WinEvent hashtable");
-		return;
-	}
 	(*env)->GetJavaVM(env, &theJVM);
 	theHeap = GetProcessHeap();
 }

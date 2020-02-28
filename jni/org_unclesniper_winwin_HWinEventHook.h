@@ -165,6 +165,14 @@ extern "C" {
 JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWinEventHook_unhookWinEventImpl
   (JNIEnv *, jclass, jlong);
 
+/*
+ * Class:     org_unclesniper_winwin_HWinEventHook
+ * Method:    setWinEventHookImpl
+ * Signature: (III)J
+ */
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWinEventHook_setWinEventHookImpl
+  (JNIEnv *, jclass, jint, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif

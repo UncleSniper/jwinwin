@@ -101,7 +101,4 @@ public class DefaultWndProc implements WndProc {
 		DefWindowProc.wmEndSession(hwnd, ending, reason);
 	}
 
-	@Override
-	public void wmWineventReceived(HWnd hwnd, WinEvent event, long msEventTime) {}
-
 }

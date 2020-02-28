@@ -1,62 +1,10 @@
 #include <limits.h>
 #include <shlwapi.h>
 
-#include "winevent.h"
 #include "stringutils.h"
 #include "org_unclesniper_winwin_Msg.h"
 
-static jobject makeWinEvent(JNIEnv *env, const winevent_t* event) {
-	int oidord;
-	jobject winwrap, objid;
-	jlong childid;
-	switch(event->idObject) {
-#define clamp(cons, ord) \
-	case cons: \
-		oidord = ord; \
-		break;
-		clamp(OBJID_ALERT, 0)
-		clamp(OBJID_CARET, 1)
-		clamp(OBJID_CLIENT, 2)
-		clamp(OBJID_CURSOR, 3)
-		clamp(OBJID_HSCROLL, 4)
-		clamp(OBJID_NATIVEOM, 5)
-		clamp(OBJID_MENU, 6)
-		clamp(OBJID_QUERYCLASSNAMEIDX, 7)
-		clamp(OBJID_SIZEGRIP, 8)
-		clamp(OBJID_SOUND, 9)
-		clamp(OBJID_SYSMENU, 10)
-		clamp(OBJID_TITLEBAR, 11)
-		clamp(OBJID_VSCROLL, 12)
-		clamp(OBJID_WINDOW, 13)
-#undef clamp
-		default:
-			oidord = -1;
-			break;
-	}
-	if(event->hwnd) {
-		winwrap = wrapWndHandle(env, event->hwnd);
-		if((*env)->ExceptionCheck(env) != JNI_FALSE)
-			return NULL;
-	}
-	else
-		winwrap = NULL;
-	if(oidord < 0)
-		objid = NULL;
-	else {
-		objid = (*env)->CallStaticObjectMethod(env, cls_HWinEventHook_ObjID,
-				mth_HWinEventHook_ObjID_byOrdinal, (jint)oidord);
-		if(!objid)
-			return NULL;
-	}
-	if(event->idChild == CHILDID_SELF)
-		childid = INT64_MAX;
-	else
-		childid = (jlong)event->idChild;
-	return (*env)->NewObject(env, cls_WinEvent, ctor_WinEvent,
-			(jint)event->event, winwrap, objid, (jlong)event->idObject, childid);
-}
-
-#define WM_WINEVENT_RECEIVED ((UINT)org_unclesniper_winwin_Msg_WM_WINEVENT_RECEIVED)
+#define WM_UNBLOCK_GETMESSAGE ((UINT)org_unclesniper_winwin_Msg_WM_UNBLOCK_GETMESSAGE)
 
 static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM lparam) {
 	JNIEnv *env;
@@ -67,7 +15,6 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 	HICON icnhndl;
 	int i;
 	jboolean jbool;
-	winevent_t* winevt;
 	if((*theJVM)->GetEnv(theJVM, (void**)&env, JNI_VERSION_1_8) != JNI_OK)
 		return DefWindowProc(win, msg, wparam, lparam);
 	if((*env)->PushLocalFrame(env, (jint)5))
@@ -272,19 +219,7 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 					wparam ? JNI_TRUE : JNI_FALSE, (jint)lparam);
 			_done
 			return (LRESULT)0;
-		case WM_WINEVENT_RECEIVED:
-			_wrapwin(0)
-			winevt = (winevent_t*)lparam;
-			shuntobj = makeWinEvent(env, winevt);
-			if(!shuntobj) {
-				_done
-				HeapFree(theHeap, (DWORD)0u, winevt);
-				return (LRESULT)0;
-			}
-			(*env)->CallVoidMethod(env, cbobj, mth_WmWineventReceived_wmWineventReceived,
-					winwrap, shuntobj, (jlong)winevt->dwmsEventTime);
-			_done
-			HeapFree(theHeap, (DWORD)0u, winevt);
+		case WM_UNBLOCK_GETMESSAGE:
 			return (LRESULT)0;
 		default:
 			_done

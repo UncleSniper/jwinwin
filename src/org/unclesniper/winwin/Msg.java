@@ -4,9 +4,9 @@ public final class Msg {
 
 	private static final int NATIVE_WM_USER = 0x0400;
 
-	public static final int WM_WINEVENT_RECEIVED = NATIVE_WM_USER;
+	private static final int WM_UNBLOCK_GETMESSAGE = NATIVE_WM_USER;
 
-	public static final int WM_USER = WM_WINEVENT_RECEIVED + 1;
+	public static final int WM_USER = WM_UNBLOCK_GETMESSAGE;
 
 	private Msg() {}
 

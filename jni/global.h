@@ -45,11 +45,23 @@ extern jfieldID fld_HMenu_handle;
 extern jclass cls_WndProc;
 
 extern jclass cls_HWinEventHook;
-extern jclass cls_HWinEventHook_ObjID;
-extern jmethodID mth_HWinEventHook_ObjID_byOrdinal;
+extern jmethodID mth_HWinEventHook_getWinEventProcByHandle;
 
-extern jclass cls_WinEvent;
-extern jmethodID ctor_WinEvent;
+extern jclass cls_WinEventProc;
+extern jmethodID mth_WinEventProc_windowCloaked;
+extern jmethodID mth_WinEventProc_windowCreate;
+extern jmethodID mth_WinEventProc_windowDestroy;
+extern jmethodID mth_WinEventProc_windowFocus;
+extern jmethodID mth_WinEventProc_windowNameChange;
+extern jmethodID mth_WinEventProc_windowReorder;
+extern jmethodID mth_WinEventProc_windowShow;
+extern jmethodID mth_WinEventProc_windowUncloaked;
+extern jmethodID mth_WinEventProc_desktopSwitch;
+extern jmethodID mth_WinEventProc_foreground;
+extern jmethodID mth_WinEventProc_windowMinimizeEnd;
+extern jmethodID mth_WinEventProc_windowMinimizeStart;
+extern jmethodID mth_WinEventProc_windowMoveSizeEnd;
+extern jmethodID mth_WinEventProc_windowMoveSizeStart;
 
 extern jclass cls_WmDestroy;
 extern jmethodID mth_WmDestroy_wmDestroy;
@@ -113,9 +125,6 @@ extern jmethodID mth_WmQueryEndSession_wmQueryEndSession;
 
 extern jclass cls_WmEndSession;
 extern jmethodID mth_WmEndSession_wmEndSession;
-
-extern jclass cls_WmWineventReceived;
-extern jmethodID mth_WmWineventReceived_wmWineventReceived;
 
 extern jclass cls_WndEnumProc;
 extern jmethodID mth_WndEnumProc_foundWindow;

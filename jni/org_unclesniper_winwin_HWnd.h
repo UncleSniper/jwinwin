@@ -153,14 +153,6 @@ JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_HWnd_getClassNameImpl
 
 /*
  * Class:     org_unclesniper_winwin_HWnd
- * Method:    setWinEventHookImpl
- * Signature: (JIII)J
- */
-JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_setWinEventHookImpl
-  (JNIEnv *, jclass, jlong, jint, jint, jint);
-
-/*
- * Class:     org_unclesniper_winwin_HWnd
  * Method:    createWindowExByClassAtom
  * Signature: (IILjava/lang/String;IIIIIJJ)J
  */

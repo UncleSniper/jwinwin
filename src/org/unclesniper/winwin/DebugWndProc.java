@@ -233,11 +233,4 @@ public class DebugWndProc implements WndProc {
 			slave.wmEndSession(hwnd, ending, reason);
 	}
 
-	@Override
-	public void wmWineventReceived(HWnd hwnd, WinEvent event, long msEventTime) {
-		System.err.println("WM_WINEVENT_RECEIVED: " + DebugWndProc.hwndMsg(hwnd));
-		if(slave != null)
-			slave.wmWineventReceived(hwnd, event, msEventTime);
-	}
-
 }

@@ -4,8 +4,6 @@
 
 #include "hashtable.h"
 
-hashtable_t winevent_hashtable;
-
 int init_hashtable(hashtable_t *table, unsigned modulus) {
 	size_t size;
 	table->modulus = modulus;

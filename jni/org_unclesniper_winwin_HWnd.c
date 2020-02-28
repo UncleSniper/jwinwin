@@ -1,23 +1,9 @@
 #include <limits.h>
 
-#include "winevent.h"
-#include "hashtable.h"
 #include "stringutils.h"
-#include "org_unclesniper_winwin_Msg.h"
-#include "org_unclesniper_winwin_HWinEventHook.h"
 
 #define SYMBOLIC_CW_USEDEFAULT INT32_MIN
 #define SYMBOLIC_HWND_MESSAGE INT64_MIN
-
-#ifndef EVENT_OBJECT_CLOAKED
-#define EVENT_OBJECT_CLOAKED 0x8017
-#endif /* EVENT_OBJECT_CLOAKED */
-#ifndef EVENT_OBJECT_UNCLOAKED
-#define EVENT_OBJECT_UNCLOAKED 0x8018
-#endif /* EVENT_OBJECT_UNCLOAKED */
-#ifndef EVENT_SYSTEM_DESKTOPSWITCH
-#define EVENT_SYSTEM_DESKTOPSWITCH 0x0020
-#endif /* EVENT_SYSTEM_DESKTOPSWITCH */
 
 JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_HWnd_closeWindow(JNIEnv *env, jobject winwrap) {
 	HWND hwnd = getWndHandle(env, winwrap);
@@ -229,75 +215,4 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_setForegroundWindowI
 		SendInput((UINT)1u, &input, (int)sizeof(input));
 	}
 	return result ? JNI_TRUE : JNI_FALSE;
-}
-
-static int shouldPostWinEvent(DWORD event, LONG idObject) {
-	switch(event) {
-		case EVENT_OBJECT_CLOAKED:
-		case EVENT_OBJECT_CREATE:
-		case EVENT_OBJECT_DESTROY:
-		case EVENT_OBJECT_FOCUS:
-		case EVENT_OBJECT_NAMECHANGE:
-		case EVENT_OBJECT_REORDER:
-		case EVENT_OBJECT_SHOW:
-		case EVENT_OBJECT_UNCLOAKED:
-			return idObject == OBJID_WINDOW;
-		case EVENT_SYSTEM_DESKTOPSWITCH:
-		case EVENT_SYSTEM_FOREGROUND:
-		case EVENT_SYSTEM_MINIMIZEEND:
-		case EVENT_SYSTEM_MINIMIZESTART:
-		case EVENT_SYSTEM_MOVESIZEEND:
-		case EVENT_SYSTEM_MOVESIZESTART:
-			return 1;
-		default:
-			return 0;
-	}
-}
-
-#define WM_WINEVENT_RECEIVED ((UINT)org_unclesniper_winwin_Msg_WM_WINEVENT_RECEIVED)
-
-static void CALLBACK winEventProc(HWINEVENTHOOK hWinEventHook, DWORD event, HWND hwnd, LONG idObject,
-		LONG idChild, DWORD idEventThread, DWORD dwmsEventTime) {
-	winevent_t *info;
-	jlong receiver;
-	/* There is no end to this nonsense; we really need to mask the stream... */
-	if(!shouldPostWinEvent(event, idObject))
-		return;
-	if(!get_hashtable(&winevent_hashtable, (jlong)hWinEventHook, &receiver))
-		return;
-	/* If the node has been nixed by erase_hashtable(), skip the event. */
-	if(!receiver)
-		return;
-	info = (winevent_t*)HeapAlloc(theHeap, (DWORD)0, (SIZE_T)sizeof(winevent_t));
-	if(!info)
-		return;
-	info->event = event;
-	info->hwnd = hwnd;
-	info->idObject = idObject;
-	info->idChild = idChild;
-	info->idEventThread = idEventThread;
-	info->dwmsEventTime = dwmsEventTime;
-	if(!PostMessageW((HWND)receiver, WM_WINEVENT_RECEIVED, (WPARAM)0, (LPARAM)info))
-		HeapFree(theHeap, (DWORD)0u, info);
-}
-
-JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_setWinEventHookImpl(JNIEnv *env, jclass clazz,
-		jlong recipient, jint eventMin, jint eventMax, jint flags) {
-	DWORD wflags;
-	HWINEVENTHOOK hook;
-	wflags = WINEVENT_OUTOFCONTEXT;
-	if(flags & org_unclesniper_winwin_HWinEventHook_WINEVENT_SKIPOWNPROCESS)
-		wflags |= WINEVENT_SKIPOWNPROCESS;
-	else if(flags & org_unclesniper_winwin_HWinEventHook_WINEVENT_SKIPOWNTHREAD)
-		wflags |= WINEVENT_SKIPOWNTHREAD;
-	SetLastError((DWORD)0u);
-	hook = SetWinEventHook((DWORD)eventMin, (DWORD)eventMax, NULL, winEventProc, (DWORD)0u, (DWORD)0u, wflags);
-	if(!hook)
-		return (jlong)0;
-	if(!put_hashtable(&winevent_hashtable, (jlong)hook, recipient)) {
-		UnhookWinEvent(hook);
-		(*env)->ThrowNew(env, cls_OutOfMemoryError, "Not enough memory to insert into WinEvent hashtable");
-		return (jlong)0;
-	}
-	return (jlong)hook;
 }

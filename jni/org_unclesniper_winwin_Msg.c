@@ -14,6 +14,8 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_Msg_pumpAll(JNIEnv *env, jcla
 	while(GetMessage(&msg, NULL, (UINT)0u, (UINT)0u)) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
+		if((*env)->ExceptionCheck(env) != JNI_FALSE)
+			return;
 	}
 }
 

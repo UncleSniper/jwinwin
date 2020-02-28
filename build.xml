@@ -78,7 +78,6 @@
 			<arg value="org.unclesniper.winwin.DefWindowProc"/>
 			<arg value="org.unclesniper.winwin.Msg"/>
 			<arg value="org.unclesniper.winwin.HWinEventHook"/>
-			<arg value="org.unclesniper.winwin.WinEvent"/>
 		</exec>
 	</target>
 
