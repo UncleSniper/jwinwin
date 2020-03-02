@@ -63,6 +63,9 @@ extern jmethodID mth_WinEventProc_windowMinimizeStart;
 extern jmethodID mth_WinEventProc_windowMoveSizeEnd;
 extern jmethodID mth_WinEventProc_windowMoveSizeStart;
 
+extern jclass cls_Hotkey;
+extern jmethodID mth_Hotkey_dispatchHandler;
+
 extern jclass cls_WmDestroy;
 extern jmethodID mth_WmDestroy_wmDestroy;
 
@@ -125,6 +128,9 @@ extern jmethodID mth_WmQueryEndSession_wmQueryEndSession;
 
 extern jclass cls_WmEndSession;
 extern jmethodID mth_WmEndSession_wmEndSession;
+
+extern jclass cls_WmHotkey;
+extern jmethodID mth_WmHotkey_wmHotkey;
 
 extern jclass cls_WndEnumProc;
 extern jmethodID mth_WndEnumProc_foundWindow;

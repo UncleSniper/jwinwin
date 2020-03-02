@@ -205,6 +205,10 @@ public final class HWnd {
 		HWnd.KNOWN_WNDPROCS.remove(handle);
 	}
 
+	public boolean wasCreatedByMe() {
+		return HWnd.KNOWN_WNDPROCS.containsKey(handle);
+	}
+
 	public static boolean enumWindows(WndEnumProc callback) {
 		if(callback == null)
 			throw new IllegalArgumentException("Callback cannot be null");

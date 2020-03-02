@@ -65,4 +65,6 @@ public final class DefWindowProc {
 
 	public static native void wmEndSession(HWnd hwnd, boolean ending, int reason);
 
+	public static native void wmHotkey(HWnd hwnd, int id, int modifiers);
+
 }

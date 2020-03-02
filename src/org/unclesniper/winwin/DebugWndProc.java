@@ -233,4 +233,48 @@ public class DebugWndProc implements WndProc {
 			slave.wmEndSession(hwnd, ending, reason);
 	}
 
+	private static void formatModifierKeys(StringBuilder builder, int modifiers) {
+		boolean first = true;
+		if((modifiers & VirtualKey.MOD_ALT) != 0) {
+			builder.append("MOD_ALT");
+			first = false;
+		}
+		if((modifiers & VirtualKey.MOD_CONTROL) != 0) {
+			if(first)
+				first = false;
+			else
+				builder.append(" | ");
+			builder.append("MOD_CONTROL");
+		}
+		if((modifiers & VirtualKey.MOD_SHIFT) != 0) {
+			if(first)
+				first = false;
+			else
+				builder.append(" | ");
+			builder.append("MOD_SHIFT");
+		}
+		if((modifiers & VirtualKey.MOD_WIN) != 0) {
+			if(first)
+				first = false;
+			else
+				builder.append(" | ");
+			builder.append("MOD_WIN");
+		}
+		if(first)
+			builder.append('0');
+	}
+
+	@Override
+	public void wmHotkey(HWnd hwnd, int id, int modifiers) {
+		StringBuilder builder = new StringBuilder("WM_HOTKEY: ");
+		builder.append(DebugWndProc.hwndMsg(hwnd));
+		builder.append(", id = ");
+		builder.append(String.valueOf(id));
+		builder.append(", modifiers = ");
+		DebugWndProc.formatModifierKeys(builder, modifiers);
+		System.err.println(builder);
+		if(slave != null)
+			slave.wmHotkey(hwnd, id, modifiers);
+	}
+
 }

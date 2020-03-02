@@ -60,6 +60,9 @@ jmethodID mth_WinEventProc_windowMinimizeStart;
 jmethodID mth_WinEventProc_windowMoveSizeEnd;
 jmethodID mth_WinEventProc_windowMoveSizeStart;
 
+jclass cls_Hotkey;
+jmethodID mth_Hotkey_dispatchHandler;
+
 jclass cls_WmDestroy;
 jmethodID mth_WmDestroy_wmDestroy;
 
@@ -122,6 +125,9 @@ jmethodID mth_WmQueryEndSession_wmQueryEndSession;
 
 jclass cls_WmEndSession;
 jmethodID mth_WmEndSession_wmEndSession;
+
+jclass cls_WmHotkey;
+jmethodID mth_WmHotkey_wmHotkey;
 
 jclass cls_WndEnumProc;
 jmethodID mth_WndEnumProc_foundWindow;
@@ -203,6 +209,9 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 		BIND_IMETHOD(WinEventProc, windowMoveSizeEnd, "(Lorg/unclesniper/winwin/HWnd;)V")
 		BIND_IMETHOD(WinEventProc, windowMoveSizeStart, "(Lorg/unclesniper/winwin/HWnd;)V")
 	END_BIND_CLASS(WinEventProc)
+	BIND_UCLASS(Hotkey)
+		BIND_SMETHOD(Hotkey, dispatchHandler, "(JII)V")
+	END_BIND_CLASS(Hotkey)
 	BIND_UCLASS(WmDestroy)
 		BIND_IMETHOD(WmDestroy, wmDestroy, "(Lorg/unclesniper/winwin/HWnd;)V")
 	END_BIND_CLASS(WmDestroy)
@@ -272,6 +281,9 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	BIND_UCLASS(WmEndSession)
 		BIND_IMETHOD(WmEndSession, wmEndSession, "(Lorg/unclesniper/winwin/HWnd;ZI)V")
 	END_BIND_CLASS(WmEndSession)
+	BIND_UCLASS(WmHotkey)
+		BIND_IMETHOD(WmHotkey, wmHotkey, "(Lorg/unclesniper/winwin/HWnd;II)V")
+	END_BIND_CLASS(WmHotkey)
 	BIND_UCLASS(WndEnumProc)
 		BIND_IMETHOD(WndEnumProc, foundWindow, "(Lorg/unclesniper/winwin/HWnd;)Z")
 	END_BIND_CLASS(WndEnumProc)
@@ -287,10 +299,14 @@ JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_WinAPI_rawErrorMessageFrom
 		jclass clazz, jint errorCode) {
 	WCHAR *buffer;
 	jstring message;
+	size_t len;
 	if(!FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, (DWORD)errorCode,
 			(DWORD)0u, (LPWSTR)&buffer, (DWORD)0u, NULL))
 		return NULL;
-	message = (*env)->NewString(env, (const jchar*)buffer, (jsize)wcslen(buffer));
+	len = wcslen(buffer);
+	if(len > (size_t)2u && buffer[len - 2] == (WCHAR)'\r' && buffer[len - 1] == (WCHAR)'\n')
+		len -= (size_t)2u;
+	message = (*env)->NewString(env, (const jchar*)buffer, (jsize)len);
 	LocalFree(buffer);
 	return message;
 }

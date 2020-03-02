@@ -5,4 +5,4 @@ if [ $# != 1 ]; then
 	exit 1
 fi
 
-javap -cp bin -v org.unclesniper.winwin."$1"
+javap -cp bin -p -v org.unclesniper.winwin."$1"

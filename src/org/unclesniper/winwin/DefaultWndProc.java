@@ -101,4 +101,9 @@ public class DefaultWndProc implements WndProc {
 		DefWindowProc.wmEndSession(hwnd, ending, reason);
 	}
 
+	@Override
+	public void wmHotkey(HWnd hwnd, int id, int modifiers) {
+		DefWindowProc.wmHotkey(hwnd, id, modifiers);
+	}
+
 }

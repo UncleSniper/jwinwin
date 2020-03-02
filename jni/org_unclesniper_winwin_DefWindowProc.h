@@ -159,6 +159,14 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmQueryEndS
 JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmEndSession
   (JNIEnv *, jclass, jobject, jboolean, jint);
 
+/*
+ * Class:     org_unclesniper_winwin_DefWindowProc
+ * Method:    wmHotkey
+ * Signature: (Lorg/unclesniper/winwin/HWnd;II)V
+ */
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmHotkey
+  (JNIEnv *, jclass, jobject, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif
