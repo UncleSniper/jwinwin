@@ -38,6 +38,8 @@ static jlong createWindowExCommon(JNIEnv *env,
 		return (jlong)0;
 	hwnd = CreateWindowEx((DWORD)dwExStyle, lpClassName, titleChars, (DWORD)dwStyle,
 			wax, (int)y, wawidth, (int)nHeight, parent, (HMENU)hMenu, NULL, NULL);
+	if(!hwnd)
+		setRelayedLastError(env, 0);
 	if(titleChars)
 		HeapFree(theHeap, (DWORD)0u, titleChars);
 	return (jlong)hwnd;
@@ -87,9 +89,12 @@ static BOOL CALLBACK HWnd_enumWindows_cb(HWND hwnd, LPARAM lparam) {
 	if((*cookie->env)->ExceptionCheck(cookie->env) != JNI_FALSE)
 		return FALSE;
 	result = (*cookie->env)->CallBooleanMethod(cookie->env, cookie->callback, mth_WndEnumProc_foundWindow, winwrap);
-	if(result == JNI_FALSE || (*cookie->env)->ExceptionCheck(cookie->env) != JNI_FALSE)
+	if(result == JNI_FALSE || (*cookie->env)->ExceptionCheck(cookie->env) != JNI_FALSE) {
+		SetLastError((DWORD)0u);
 		return FALSE;
+	}
 	(*cookie->env)->DeleteLocalRef(cookie->env, winwrap);
+	SetLastError((DWORD)0u);
 	return TRUE;
 }
 
@@ -99,7 +104,10 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_enumWindowsImpl(JNIE
 	SetLastError((DWORD)0u);
 	cookie.env = env;
 	cookie.callback = callback;
-	return EnumWindows(HWnd_enumWindows_cb, (LPARAM)&cookie) ? JNI_TRUE : JNI_FALSE;
+	if(EnumWindows(HWnd_enumWindows_cb, (LPARAM)&cookie))
+		return JNI_TRUE;
+	setRelayedLastError(env, SRE_CHECK_BEFORE);
+	return JNI_FALSE;
 }
 
 JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_HWnd_getWindowTextImpl(JNIEnv *env, jobject winwrap) {
@@ -127,8 +135,10 @@ JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_HWnd_getWindowTextImpl(JNI
 		return NULL;
 	SetLastError((DWORD)0u);
 	length = GetWindowTextW(hwnd, buffer, length);
-	if(!length)
+	if(!length) {
+		setRelayedLastError(env, 0);
 		return NULL;
+	}
 	result = lpcwstrToJString(env, buffer);
 	HeapFree(theHeap, (DWORD)0u, buffer);
 	return result;
@@ -154,6 +164,7 @@ JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_HWnd_getClassNameImpl(JNIE
 			break;
 		copied = GetClassNameW(hwnd, next_buffer, length);
 		if(!copied) {
+			setRelayedLastError(env, 0);
 			HeapFree(theHeap, (DWORD)0u, next_buffer);
 			break;
 		}
@@ -209,7 +220,10 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_setForegroundWindowI
 				alt_pressed = 1;
 		}
 	}
+	SetLastError((DWORD)0u);
 	result = SetForegroundWindow((HWND)handle);
+	if(!result)
+		setRelayedLastError(env, 0);
 	if(force != JNI_FALSE && !alt_pressed) {
 		input.ki.dwFlags = KEYEVENTF_KEYUP;
 		SendInput((UINT)1u, &input, (int)sizeof(input));

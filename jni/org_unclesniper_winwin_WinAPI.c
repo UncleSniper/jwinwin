@@ -6,6 +6,9 @@ HANDLE theHeap;
 
 JavaVM *theJVM = NULL;
 
+jclass cls_WinAPI;
+jmethodID mth_WinAPI_setRelayedLastError;
+
 jclass cls_Enum;
 jmethodID mth_Enum_ordinal;
 
@@ -160,6 +163,9 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	END_BIND_CLASS(Enum)
 	BEGIN_BIND_CLASS(OutOfMemoryError, "java/lang/OutOfMemoryError")
 	END_BIND_CLASS(OutOfMemoryError)
+	BIND_UCLASS(WinAPI)
+		BIND_SMETHOD(WinAPI, setRelayedLastError, "(I)V")
+	END_BIND_CLASS(WinAPI)
 	BIND_UCLASS(HWnd)
 		BIND_FIELD(HWnd, handle, "J")
 		BIND_CTOR(HWnd, "(J)V")

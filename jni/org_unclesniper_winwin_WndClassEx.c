@@ -271,7 +271,9 @@ JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_WndClassEx_registerClassExImp
 			HeapFree(theHeap, (DWORD)0u, classChars);
 		return (jint)0;
 	}
-	atom = RegisterClassEx(&info);
+	atom = RegisterClassExW(&info);
+	if(!atom)
+		setRelayedLastError(env, 0);
 	if(classChars)
 		HeapFree(theHeap, (DWORD)0u, classChars);
 	return (jint)atom;

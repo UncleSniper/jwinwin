@@ -134,11 +134,16 @@ JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWinEventHook_setWinEventHoo
 		wflags |= WINEVENT_SKIPOWNTHREAD;
 	SetLastError((DWORD)0u);
 	hook = SetWinEventHook((DWORD)eventMin, (DWORD)eventMax, NULL, winEventProc, (DWORD)0u, (DWORD)0u, wflags);
+	if(!hook)
+		setRelayedLastError(env, 0);
 	return (jlong)hook;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWinEventHook_unhookWinEventImpl(JNIEnv *env, jclass clazz,
 		jlong handle) {
 	SetLastError((DWORD)0u);
-	return UnhookWinEvent((HWINEVENTHOOK)handle) ? JNI_TRUE : JNI_FALSE;
+	if(UnhookWinEvent((HWINEVENTHOOK)handle))
+		return JNI_TRUE;
+	setRelayedLastError(env, 0);
+	return JNI_FALSE;
 }

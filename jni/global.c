@@ -19,3 +19,18 @@ HBRUSH getBrushHandle(JNIEnv *env, jobject brshwrap) {
 jobject wrapWndHandle(JNIEnv *env, HWND handle) {
 	return (*env)->NewObject(env, cls_HWnd, ctor_HWnd, (jlong)handle);
 }
+
+int setRelayedLastError(JNIEnv *env, int check) {
+	DWORD error;
+	error = GetLastError();
+	if(check & SRE_CHECK_BEFORE) {
+		if((*env)->ExceptionCheck(env) != JNI_FALSE)
+			return 0;
+	}
+	(*env)->CallStaticVoidMethod(env, cls_WinAPI, mth_WinAPI_setRelayedLastError, (jint)error);
+	if(check & SRE_CHECK_AFTER) {
+		if((*env)->ExceptionCheck(env) != JNI_FALSE)
+			return 0;
+	}
+	return 1;
+}

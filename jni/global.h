@@ -9,6 +9,9 @@ extern HANDLE theHeap;
 
 extern JavaVM *theJVM;
 
+extern jclass cls_WinAPI;
+extern jmethodID mth_WinAPI_setRelayedLastError;
+
 extern jclass cls_Enum;
 extern jmethodID mth_Enum_ordinal;
 
@@ -144,5 +147,9 @@ HCURSOR getCursorHandle(JNIEnv *env, jobject curwrap);
 HBRUSH getBrushHandle(JNIEnv *env, jobject brshwrap);
 
 jobject wrapWndHandle(JNIEnv *env, HWND handle);
+
+#define SRE_CHECK_BEFORE 1
+#define SRE_CHECK_AFTER 2
+int setRelayedLastError(JNIEnv *env, int check);
 
 #endif /* JWINWIN_JNI_GLOBAL_H */

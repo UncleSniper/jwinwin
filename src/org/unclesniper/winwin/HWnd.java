@@ -146,7 +146,7 @@ public final class HWnd {
 		String text = getWindowTextImpl();
 		if(text != null)
 			return text;
-		int error = WinAPI.getLastError();
+		int error = WinAPI.getRelayedLastError(true);
 		if(error != 0)
 			throw new WindowsException("Failed to retrieve window text", error);
 		return "";
@@ -158,7 +158,7 @@ public final class HWnd {
 		String name = getClassNameImpl();
 		if(name != null)
 			return name;
-		int error = WinAPI.getLastError();
+		int error = WinAPI.getRelayedLastError(true);
 		if(error != 0)
 			throw new WindowsException("Failed to retrieve window class name", error);
 		return "";
@@ -215,7 +215,7 @@ public final class HWnd {
 		boolean result = HWnd.enumWindowsImpl(callback);
 		if(result)
 			return true;
-		int error = WinAPI.getLastError();
+		int error = WinAPI.getRelayedLastError(true);
 		if(error == 0)
 			return false;
 		throw new WindowsException("Failed to enumerate windows", error);

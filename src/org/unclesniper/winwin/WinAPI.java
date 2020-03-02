@@ -62,6 +62,8 @@ public class WinAPI {
 
 	private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
 
+	private static final ThreadLocal<Integer> LAST_ERROR = new ThreadLocal<Integer>();
+
 	private static void bindNative() throws IOException {
 		File userHome = new File(System.getProperty("user.home"));
 		File dotJNI = new File(userHome, ".jni");
@@ -119,6 +121,23 @@ public class WinAPI {
 	private static native void initNative();
 
 	public static native int getLastError();
+
+	private static void setRelayedLastError(int error) {
+		if(error == 0)
+			WinAPI.LAST_ERROR.remove();
+		else
+			WinAPI.LAST_ERROR.set(error);
+	}
+
+	public static int getRelayedLastError(boolean clear) {
+		Integer error = WinAPI.LAST_ERROR.get();
+		int code = error == null ? 0 : error.intValue();
+		if(code == 0)
+			return WinAPI.getLastError();
+		if(clear)
+			WinAPI.LAST_ERROR.remove();
+		return code;
+	}
 
 	public static native String rawErrorMessageFromCode(int errorCode);
 

@@ -5,7 +5,7 @@ public class WindowsException extends RuntimeException {
 	private final int errorCode;
 
 	public WindowsException(String message) {
-		this(message, WinAPI.getLastError());
+		this(message, WinAPI.getRelayedLastError(true));
 	}
 
 	public WindowsException(String message, int errorCode) {
