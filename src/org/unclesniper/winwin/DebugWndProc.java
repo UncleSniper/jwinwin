@@ -265,16 +265,18 @@ public class DebugWndProc implements WndProc {
 	}
 
 	@Override
-	public void wmHotkey(HWnd hwnd, int id, int modifiers) {
+	public void wmHotkey(HWnd hwnd, int id, int modifiers, VirtualKey key) {
 		StringBuilder builder = new StringBuilder("WM_HOTKEY: ");
 		builder.append(DebugWndProc.hwndMsg(hwnd));
 		builder.append(", id = ");
 		builder.append(String.valueOf(id));
 		builder.append(", modifiers = ");
 		DebugWndProc.formatModifierKeys(builder, modifiers);
+		builder.append(", key = ");
+		builder.append(key == null ? "<null>" : key.name());
 		System.err.println(builder);
 		if(slave != null)
-			slave.wmHotkey(hwnd, id, modifiers);
+			slave.wmHotkey(hwnd, id, modifiers, key);
 	}
 
 }

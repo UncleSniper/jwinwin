@@ -2,6 +2,8 @@
 #include <string.h>
 #include <windows.h>
 
+void zeroLLHotkeyTable();
+
 HANDLE theHeap;
 
 JavaVM *theJVM = NULL;
@@ -65,6 +67,9 @@ jmethodID mth_WinEventProc_windowMoveSizeStart;
 
 jclass cls_Hotkey;
 jmethodID mth_Hotkey_dispatchHandler;
+
+jclass cls_VirtualKey;
+jmethodID mth_VirtualKey_byCode;
 
 jclass cls_WmDestroy;
 jmethodID mth_WmDestroy_wmDestroy;
@@ -216,8 +221,11 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 		BIND_IMETHOD(WinEventProc, windowMoveSizeStart, "(Lorg/unclesniper/winwin/HWnd;)V")
 	END_BIND_CLASS(WinEventProc)
 	BIND_UCLASS(Hotkey)
-		BIND_SMETHOD(Hotkey, dispatchHandler, "(JII)V")
+		BIND_SMETHOD(Hotkey, dispatchHandler, "(JIIS)V")
 	END_BIND_CLASS(Hotkey)
+	BIND_UCLASS(VirtualKey)
+		BIND_SMETHOD(VirtualKey, byCode, "(S)Lorg/unclesniper/winwin/VirtualKey;")
+	END_BIND_CLASS(VirtualKey)
 	BIND_UCLASS(WmDestroy)
 		BIND_IMETHOD(WmDestroy, wmDestroy, "(Lorg/unclesniper/winwin/HWnd;)V")
 	END_BIND_CLASS(WmDestroy)
@@ -288,13 +296,16 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 		BIND_IMETHOD(WmEndSession, wmEndSession, "(Lorg/unclesniper/winwin/HWnd;ZI)V")
 	END_BIND_CLASS(WmEndSession)
 	BIND_UCLASS(WmHotkey)
-		BIND_IMETHOD(WmHotkey, wmHotkey, "(Lorg/unclesniper/winwin/HWnd;II)V")
+		BIND_IMETHOD(WmHotkey, wmHotkey, "(Lorg/unclesniper/winwin/HWnd;IILorg/unclesniper/winwin/VirtualKey;)V")
 	END_BIND_CLASS(WmHotkey)
 	BIND_UCLASS(WndEnumProc)
 		BIND_IMETHOD(WndEnumProc, foundWindow, "(Lorg/unclesniper/winwin/HWnd;)Z")
 	END_BIND_CLASS(WndEnumProc)
 	(*env)->GetJavaVM(env, &theJVM);
 	theHeap = GetProcessHeap();
+	/*
+	zeroLLHotkeyTable();
+	*/
 }
 
 JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_WinAPI_getLastError(JNIEnv *env, jclass clazz) {

@@ -176,14 +176,10 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmEndSession(JN
 		DefWindowProc(hwnd, WM_ENDSESSION, (WPARAM)(ending == JNI_FALSE ? FALSE : TRUE), (LPARAM)reason);
 }
 
-JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmHotkey(JNIEnv *env,
-		jclass clazz, jobject winwrap, jint id, jint modifiers) {
-	HWND hwnd;
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmHotkeyImpl(JNIEnv *env,
+		jclass clazz, jlong hwnd, jint id, jint modifiers, jshort key) {
 	WPARAM wparam;
 	LPARAM lparam;
-	hwnd = getWndHandle(env, winwrap);
-	if(!hwnd)
-		return;
 	switch(id) {
 		case (jint)-1:
 			wparam = (WPARAM)IDHOT_SNAPWINDOW;
@@ -197,5 +193,6 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmHotkey(JNIEnv
 	}
 	lparam = (LPARAM)modifiers;
 	lparam &= (LPARAM)(MOD_ALT | MOD_CONTROL | MOD_SHIFT | MOD_WIN);
-	DefWindowProc(hwnd, WM_HOTKEY, wparam, lparam);
+	lparam |= (LPARAM)((int)key & 0xFF) << 16;
+	DefWindowProc((HWND)hwnd, WM_HOTKEY, wparam, lparam);
 }

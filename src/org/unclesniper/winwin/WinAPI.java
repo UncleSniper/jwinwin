@@ -58,6 +58,9 @@ public class WinAPI {
 	public static final int COLOR_WINDOWFRAME = 6;
 	public static final int COLOR_WINDOWTEXT = 8;
 
+	public static final int ERROR_HOTKEY_ALREADY_REGISTERED = 0x581;
+	public static final int ERROR_HOTKEY_NOT_REGISTERED = 0x58B;
+
 	private static final String DLL_NAME = "jwinwin";
 
 	private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();

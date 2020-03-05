@@ -79,6 +79,7 @@
 			<arg value="org.unclesniper.winwin.Msg"/>
 			<arg value="org.unclesniper.winwin.HWinEventHook"/>
 			<arg value="org.unclesniper.winwin.Hotkey"/>
+			<arg value="org.unclesniper.winwin.WinHook"/>
 		</exec>
 	</target>
 
@@ -102,6 +103,7 @@
 			<arg value="${jni.dir}/org_unclesniper_winwin_Msg.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_HWinEventHook.c"/>
 			<arg value="${jni.dir}/org_unclesniper_winwin_Hotkey.c"/>
+			<arg value="${jni.dir}/org_unclesniper_winwin_WinHook.c"/>
 			<arg value="-lshlwapi"/>
 		</exec>
 	</target>

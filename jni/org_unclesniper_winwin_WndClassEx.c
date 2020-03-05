@@ -221,7 +221,11 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 			return (LRESULT)0;
 		case WM_HOTKEY:
 			_wrapwin(0)
-			(*env)->CallVoidMethod(env, cbobj, mth_WmHotkey_wmHotkey, winwrap, (jint)wparam, (jint)lparam);
+			shuntobj = (*env)->CallStaticObjectMethod(env, cls_VirtualKey, mth_VirtualKey_byCode,
+					(jshort)((lparam >> 16) & (LPARAM)0xFF));
+			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+				(*env)->CallVoidMethod(env, cbobj, mth_WmHotkey_wmHotkey, winwrap, (jint)wparam,
+						(jint)(lparam & (LPARAM)0xFF), shuntobj);
 			_done
 			return (LRESULT)0;
 		case WM_UNBLOCK_GETMESSAGE:

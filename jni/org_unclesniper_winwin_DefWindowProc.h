@@ -161,11 +161,11 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmEndSession
 
 /*
  * Class:     org_unclesniper_winwin_DefWindowProc
- * Method:    wmHotkey
- * Signature: (Lorg/unclesniper/winwin/HWnd;II)V
+ * Method:    wmHotkeyImpl
+ * Signature: (JIIS)V
  */
-JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmHotkey
-  (JNIEnv *, jclass, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmHotkeyImpl
+  (JNIEnv *, jclass, jlong, jint, jint, jshort);
 
 #ifdef __cplusplus
 }

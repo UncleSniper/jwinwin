@@ -9,13 +9,13 @@ public final class Hotkey {
 		WinAPI.init();
 	}
 
-	private static final class KeyKey {
+	static final class KeyKey {
 
 		final long windowOrThread;
 
 		final int id;
 
-		public KeyKey(long windowOrThread, int id) {
+		KeyKey(long windowOrThread, int id) {
 			this.windowOrThread = windowOrThread;
 			this.id = id;
 		}
@@ -39,8 +39,8 @@ public final class Hotkey {
 
 	}
 
-	private static final Map<KeyKey, HotkeyHandler> WINDOW_HANDLERS = new ConcurrentHashMap<KeyKey, HotkeyHandler>();
-	private static final Map<KeyKey, HotkeyHandler> THREAD_HANDLERS = new ConcurrentHashMap<KeyKey, HotkeyHandler>();
+	static final Map<KeyKey, HotkeyHandler> WINDOW_HANDLERS = new ConcurrentHashMap<KeyKey, HotkeyHandler>();
+	static final Map<KeyKey, HotkeyHandler> THREAD_HANDLERS = new ConcurrentHashMap<KeyKey, HotkeyHandler>();
 
 	private final HWnd window;
 
@@ -71,10 +71,12 @@ public final class Hotkey {
 			throw new WindowsException("Failed to unregister hotkey");
 		if(handler != null) {
 			long win = window == null ? 0l : window.getHandle();
-			if(win == 0l)
-				Hotkey.THREAD_HANDLERS.remove(new KeyKey(Thread.currentThread().getId(), id));
-			else
-				Hotkey.WINDOW_HANDLERS.remove(new KeyKey(win, id));
+			synchronized(Hotkey.WINDOW_HANDLERS) {
+				if(win == 0l)
+					Hotkey.THREAD_HANDLERS.remove(new KeyKey(Thread.currentThread().getId(), id));
+				else
+					Hotkey.WINDOW_HANDLERS.remove(new KeyKey(win, id));
+			}
 		}
 	}
 
@@ -94,27 +96,42 @@ public final class Hotkey {
 			throw new IllegalArgumentException("Virtual key cannot be null");
 		if(id < 0x0000 || id > 0xBFFF)
 			throw new IllegalArgumentException("Hotkey ID out of range: " + id);
-		if(!Hotkey.registerHotKeyImpl(win, id, modifiers, key.getCode()))
-			throw new WindowsException("Failed to register hotkey");
-		if(handler != null) {
-			if(win == 0l)
-				Hotkey.THREAD_HANDLERS.put(new KeyKey(Thread.currentThread().getId(), id), handler);
-			else
-				Hotkey.WINDOW_HANDLERS.put(new KeyKey(win, id), handler);
+		KeyKey keykey;
+		synchronized(Hotkey.WINDOW_HANDLERS) {
+			if(handler == null)
+				keykey = null;
+			else if(win == 0l) {
+				keykey = new KeyKey(Thread.currentThread().getId(), id);
+				if(Hotkey.THREAD_HANDLERS.containsKey(keykey))
+					throw new IllegalStateException("Hotkey handler already registered");
+			}
+			else {
+				keykey = new KeyKey(win, id);
+				if(Hotkey.WINDOW_HANDLERS.containsKey(keykey))
+					throw new IllegalStateException("Hotkey handler already registered");
+			}
+			if(!Hotkey.registerHotKeyImpl(win, id, modifiers, key.getCode()))
+				throw new WindowsException("Failed to register hotkey");
+			if(handler != null) {
+				if(win == 0l)
+					Hotkey.THREAD_HANDLERS.put(keykey, handler);
+				else
+					Hotkey.WINDOW_HANDLERS.put(keykey, handler);
+			}
 		}
 		return new Hotkey(hwnd, id, handler);
 	}
 
 	private static native boolean registerHotKeyImpl(long hwnd, int id, int modifiers, short key);
 
-	private static void dispatchHandler(long hwnd, int id, int modifiers) {
+	private static void dispatchHandler(long hwnd, int id, int modifiers, short key) {
 		HotkeyHandler handler;
 		if(hwnd == 0l)
 			handler = Hotkey.THREAD_HANDLERS.get(new KeyKey(Thread.currentThread().getId(), id));
 		else
 			handler = Hotkey.WINDOW_HANDLERS.get(new KeyKey(hwnd, id));
 		if(handler != null)
-			handler.hotkeyPressed(id, modifiers);
+			handler.hotkeyPressed(id, modifiers, VirtualKey.byCode(key));
 	}
 
 }

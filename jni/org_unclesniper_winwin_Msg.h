@@ -11,8 +11,12 @@ extern "C" {
 #define org_unclesniper_winwin_Msg_NATIVE_WM_USER 1024L
 #undef org_unclesniper_winwin_Msg_WM_UNBLOCK_GETMESSAGE
 #define org_unclesniper_winwin_Msg_WM_UNBLOCK_GETMESSAGE 1024L
+#undef org_unclesniper_winwin_Msg_WM_STOP_HOOKING
+#define org_unclesniper_winwin_Msg_WM_STOP_HOOKING 1025L
+#undef org_unclesniper_winwin_Msg_WM_KEY_HOOK_EVENT
+#define org_unclesniper_winwin_Msg_WM_KEY_HOOK_EVENT 1026L
 #undef org_unclesniper_winwin_Msg_WM_USER
-#define org_unclesniper_winwin_Msg_WM_USER 1024L
+#define org_unclesniper_winwin_Msg_WM_USER 1027L
 /*
  * Class:     org_unclesniper_winwin_Msg
  * Method:    pumpOne

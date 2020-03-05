@@ -69,6 +69,9 @@ extern jmethodID mth_WinEventProc_windowMoveSizeStart;
 extern jclass cls_Hotkey;
 extern jmethodID mth_Hotkey_dispatchHandler;
 
+extern jclass cls_VirtualKey;
+extern jmethodID mth_VirtualKey_byCode;
+
 extern jclass cls_WmDestroy;
 extern jmethodID mth_WmDestroy_wmDestroy;
 

@@ -102,8 +102,8 @@ public class DefaultWndProc implements WndProc {
 	}
 
 	@Override
-	public void wmHotkey(HWnd hwnd, int id, int modifiers) {
-		DefWindowProc.wmHotkey(hwnd, id, modifiers);
+	public void wmHotkey(HWnd hwnd, int id, int modifiers, VirtualKey key) {
+		DefWindowProc.wmHotkey(hwnd, id, modifiers, key);
 	}
 
 }

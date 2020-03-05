@@ -65,6 +65,11 @@ public final class DefWindowProc {
 
 	public static native void wmEndSession(HWnd hwnd, boolean ending, int reason);
 
-	public static native void wmHotkey(HWnd hwnd, int id, int modifiers);
+	public static void wmHotkey(HWnd hwnd, int id, int modifiers, VirtualKey key) {
+		DefWindowProc.wmHotkeyImpl(hwnd == null ? 0l : hwnd.getHandle(), id, modifiers,
+				key == null ? (short)0 : key.getCode());
+	}
+
+	private static native void wmHotkeyImpl(long hwnd, int id, int modifiers, short key);
 
 }

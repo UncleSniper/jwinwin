@@ -2,7 +2,8 @@
 
 static int doHotkey(JNIEnv *env, const MSG *msg) {
 	(*env)->CallStaticVoidMethod(env, cls_Hotkey, mth_Hotkey_dispatchHandler,
-			(jlong)msg->hwnd, (jint)msg->wParam, (jint)msg->lParam);
+			(jlong)msg->hwnd, (jint)msg->wParam, (jint)(msg->lParam & (LPARAM)0xFF),
+			(jshort)((msg->lParam >> 16) & (LPARAM)0xFF));
 	return (*env)->ExceptionCheck(env) == JNI_FALSE;
 }
 

@@ -200,9 +200,11 @@ public enum VirtualKey {
 	public static final int MODMASK_OUT = 0x000F;
 
 	private static final Map<Character, VirtualKey> BY_CHAR;
+	private static final Map<Short, VirtualKey> BY_CODE;
 
 	static {
 		BY_CHAR = new HashMap<Character, VirtualKey>();
+		BY_CODE = new HashMap<Short, VirtualKey>();
 		for(VirtualKey key : VirtualKey.values()) {
 			if(key.character != '\u0000') {
 				BY_CHAR.put(key.character, key);
@@ -211,6 +213,7 @@ public enum VirtualKey {
 					BY_CHAR.put(lo, key);
 				}
 			}
+			BY_CODE.put(key.code, key);
 		}
 		BY_CHAR.put('\r', VK_RETURN);
 	}
@@ -240,14 +243,18 @@ public enum VirtualKey {
 		return character;
 	}
 
-	public VirtualKey byChar(char c) {
+	public static VirtualKey byChar(char c) {
 		return VirtualKey.BY_CHAR.get(c);
 	}
 
-	public VirtualKey F(int index) {
+	public static VirtualKey F(int index) {
 		if(index < 1 || index > 24)
 			return null;
 		return VirtualKey.VALUES[VirtualKey.F_KEY_BASE + index];
+	}
+
+	public static VirtualKey byCode(short code) {
+		return VirtualKey.BY_CODE.get(code);
 	}
 
 }

@@ -79,6 +79,10 @@ extern "C" {
 #define org_unclesniper_winwin_WinAPI_COLOR_WINDOWFRAME 6L
 #undef org_unclesniper_winwin_WinAPI_COLOR_WINDOWTEXT
 #define org_unclesniper_winwin_WinAPI_COLOR_WINDOWTEXT 8L
+#undef org_unclesniper_winwin_WinAPI_ERROR_HOTKEY_ALREADY_REGISTERED
+#define org_unclesniper_winwin_WinAPI_ERROR_HOTKEY_ALREADY_REGISTERED 1409L
+#undef org_unclesniper_winwin_WinAPI_ERROR_HOTKEY_NOT_REGISTERED
+#define org_unclesniper_winwin_WinAPI_ERROR_HOTKEY_NOT_REGISTERED 1419L
 /*
  * Class:     org_unclesniper_winwin_WinAPI
  * Method:    initNative
