@@ -107,6 +107,14 @@ JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_WinAPI_getLastError
 JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_WinAPI_rawErrorMessageFromCode
   (JNIEnv *, jclass, jint);
 
+/*
+ * Class:     org_unclesniper_winwin_WinAPI
+ * Method:    getCurrentThreadId
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_WinAPI_getCurrentThreadId
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

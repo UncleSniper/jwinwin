@@ -327,3 +327,7 @@ JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_WinAPI_rawErrorMessageFrom
 	LocalFree(buffer);
 	return message;
 }
+
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_WinAPI_getCurrentThreadId(JNIEnv *env, jclass clazz) {
+	return (jlong)GetCurrentThreadId();
+}

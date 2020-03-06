@@ -41,3 +41,11 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_Msg_pumpAll(JNIEnv *env, jcla
 JNIEXPORT void JNICALL Java_org_unclesniper_winwin_Msg_postQuitMessage(JNIEnv *env, jclass clazz, jint status) {
 	PostQuitMessage((int)status);
 }
+
+JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_Msg_postQuitMessageToThreadImpl(JNIEnv *env, jclass clazz,
+		jlong threadId, jint status) {
+	if(PostThreadMessageW((DWORD)threadId, WM_QUIT, (WPARAM)status, (LPARAM)0))
+		return JNI_TRUE;
+	setRelayedLastError(env, 0);
+	return JNI_FALSE;
+}

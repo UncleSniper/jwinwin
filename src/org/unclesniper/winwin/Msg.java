@@ -20,4 +20,11 @@ public final class Msg {
 
 	public static native void postQuitMessage(int status);
 
+	public static void postQuitMessageToThread(long threadId, int status) {
+		if(!Msg.postQuitMessageToThreadImpl(threadId, status))
+			throw new WindowsException("Failed to post quit message to thread");
+	}
+
+	private static native boolean postQuitMessageToThreadImpl(long threadId, int status);
+
 }

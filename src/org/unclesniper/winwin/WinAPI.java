@@ -149,4 +149,6 @@ public class WinAPI {
 		return message == null ? "Unknown error" : message;
 	}
 
+	public static native long getCurrentThreadId();
+
 }
