@@ -236,6 +236,11 @@ public final class HWnd {
 
 	private static native boolean setForegroundWindowImpl(long handle, boolean force);
 
+	@Override
+	public String toString() {
+		return "0x" + Long.toHexString(handle);
+	}
+
 	public static void main(String[] args) {
 		new WndClassEx(new DebugWndProc(new DefaultWndProc())).withBackground(WinAPI.COLOR_WINDOW)
 				.registerClassEx()
