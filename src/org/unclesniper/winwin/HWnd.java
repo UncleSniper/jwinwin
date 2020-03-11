@@ -236,6 +236,18 @@ public final class HWnd {
 
 	private static native boolean setForegroundWindowImpl(long handle, boolean force);
 
+	public static HWnd findWindow(String className, String windowName) {
+		long hwnd = HWnd.findWindowImpl(className, windowName);
+		if(hwnd != 0l)
+			return new HWnd(hwnd);
+		int code = WinAPI.getRelayedLastError(true);
+		if(code == 0)
+			return null;
+		throw new WindowsException("Failed to find window", code);
+	}
+
+	private static native long findWindowImpl(String className, String windowName);
+
 	@Override
 	public String toString() {
 		return "0x" + Long.toHexString(handle);

@@ -43,10 +43,10 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_Msg_postQuitMessage
 
 /*
  * Class:     org_unclesniper_winwin_Msg
- * Method:    postQuitMessageToThread
- * Signature: (JI)V
+ * Method:    postQuitMessageToThreadImpl
+ * Signature: (JI)Z
  */
-JNIEXPORT void JNICALL Java_org_unclesniper_winwin_Msg_postQuitMessageToThread
+JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_Msg_postQuitMessageToThreadImpl
   (JNIEnv *, jclass, jlong, jint);
 
 #ifdef __cplusplus

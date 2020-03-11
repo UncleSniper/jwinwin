@@ -191,6 +191,14 @@ JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_getForegroundWindowImpl
 JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_setForegroundWindowImpl
   (JNIEnv *, jclass, jlong, jboolean);
 
+/*
+ * Class:     org_unclesniper_winwin_HWnd
+ * Method:    findWindowImpl
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_findWindowImpl
+  (JNIEnv *, jclass, jstring, jstring);
+
 #ifdef __cplusplus
 }
 #endif

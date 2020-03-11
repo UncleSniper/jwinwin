@@ -230,3 +230,35 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_setForegroundWindowI
 	}
 	return result ? JNI_TRUE : JNI_FALSE;
 }
+
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_findWindowImpl(JNIEnv *env, jclass clazz,
+		jstring className, jstring windowName) {
+	LPWSTR cname, wname;
+	HWND hwnd;
+	if(className) {
+		cname = jstringToLPWSTR(env, className);
+		if(!cname)
+			return (jlong)0;
+	}
+	else
+		cname = NULL;
+	if(windowName) {
+		wname = jstringToLPWSTR(env, windowName);
+		if(!wname) {
+			if(cname)
+				HeapFree(theHeap, (DWORD)0u, cname);
+			return (jlong)0;
+		}
+	}
+	else
+		wname = NULL;
+	SetLastError((DWORD)0u);
+	hwnd = FindWindowW(cname, wname);
+	if(!hwnd)
+		setRelayedLastError(env, 0);
+	if(cname)
+		HeapFree(theHeap, (DWORD)0u, cname);
+	if(wname)
+		HeapFree(theHeap, (DWORD)0u, wname);
+	return (jlong)hwnd;
+}

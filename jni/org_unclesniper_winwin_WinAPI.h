@@ -115,6 +115,14 @@ JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_WinAPI_rawErrorMessageFrom
 JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_WinAPI_getCurrentThreadId
   (JNIEnv *, jclass);
 
+/*
+ * Class:     org_unclesniper_winwin_WinAPI
+ * Method:    getCurrentProcessId
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_WinAPI_getCurrentProcessId
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

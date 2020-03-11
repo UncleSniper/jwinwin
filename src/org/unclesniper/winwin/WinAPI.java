@@ -151,4 +151,6 @@ public class WinAPI {
 
 	public static native long getCurrentThreadId();
 
+	public static native long getCurrentProcessId();
+
 }
