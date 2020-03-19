@@ -262,3 +262,10 @@ JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_findWindowImpl(JNIEnv *
 		HeapFree(theHeap, (DWORD)0u, wname);
 	return (jlong)hwnd;
 }
+
+JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_isWindowVisible(JNIEnv *env, jobject winwrap) {
+	HWND hwnd = getWndHandle(env, winwrap);
+	if(!hwnd)
+		return JNI_FALSE;
+	return IsWindowVisible(hwnd) ? JNI_TRUE : JNI_FALSE;
+}

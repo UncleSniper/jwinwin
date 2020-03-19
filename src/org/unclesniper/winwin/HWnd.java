@@ -166,6 +166,8 @@ public final class HWnd {
 
 	private native String getClassNameImpl();
 
+	public native boolean isWindowVisible();
+
 	public static HWnd createWindowEx(int dwExStyle, ClassAtom lpClassName, String lpWindowName,
 			int dwStyle, int x, int y, int nWidth, int nHeight, HWnd hWndParent, HMenu hMenu) {
 		long handle = HWnd.createWindowExByClassAtom(dwExStyle, lpClassName.getAtom(), lpWindowName,

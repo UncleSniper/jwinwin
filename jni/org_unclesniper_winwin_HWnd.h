@@ -153,6 +153,14 @@ JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_HWnd_getClassNameImpl
 
 /*
  * Class:     org_unclesniper_winwin_HWnd
+ * Method:    isWindowVisible
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_isWindowVisible
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_HWnd
  * Method:    createWindowExByClassAtom
  * Signature: (IILjava/lang/String;IIIIIJJ)J
  */
