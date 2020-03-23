@@ -161,6 +161,22 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_isWindowVisible
 
 /*
  * Class:     org_unclesniper_winwin_HWnd
+ * Method:    isIconic
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_isIconic
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_HWnd
+ * Method:    isZoomed
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_isZoomed
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_HWnd
  * Method:    createWindowExByClassAtom
  * Signature: (IILjava/lang/String;IIIIIJJ)J
  */

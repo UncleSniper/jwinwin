@@ -279,4 +279,17 @@ public class DebugWndProc implements WndProc {
 			slave.wmHotkey(hwnd, id, modifiers, key);
 	}
 
+	@Override
+	public void wmShowWindow(HWnd hwnd, boolean shown, ShowWindow reason) {
+		StringBuilder builder = new StringBuilder("WM_SHOWWINDOW: ");
+		builder.append(DebugWndProc.hwndMsg(hwnd));
+		builder.append(", shown = ");
+		builder.append(String.valueOf(shown));
+		builder.append(", reason = ");
+		builder.append(reason.name());
+		System.err.println(builder);
+		if(slave != null)
+			slave.wmShowWindow(hwnd, shown, reason);
+	}
+
 }

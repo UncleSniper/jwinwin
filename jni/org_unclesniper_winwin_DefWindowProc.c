@@ -196,3 +196,8 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmHotkeyImpl(JN
 	lparam |= (LPARAM)((int)key & 0xFF) << 16;
 	DefWindowProc((HWND)hwnd, WM_HOTKEY, wparam, lparam);
 }
+
+JNIEXPORT void JNICALL Java_org_unclesniper_winwin_DefWindowProc_wmShowWindowImpl(JNIEnv *env,
+		jclass clazz, jlong hwnd, jboolean shown, jint reason) {
+	DefWindowProc((HWND)hwnd, WM_SHOWWINDOW, (WPARAM)(shown == JNI_FALSE ? FALSE : TRUE), (LPARAM)reason);
+}

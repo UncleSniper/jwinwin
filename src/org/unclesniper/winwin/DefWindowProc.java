@@ -72,4 +72,11 @@ public final class DefWindowProc {
 
 	private static native void wmHotkeyImpl(long hwnd, int id, int modifiers, short key);
 
+	public static void wmShowWindow(HWnd hwnd, boolean shown, WmShowWindow.ShowWindow reason) {
+		DefWindowProc.wmShowWindowImpl(hwnd == null ? 0l : hwnd.getHandle(), shown,
+				reason == null ? 0 : reason.ordinal());
+	}
+
+	private static native void wmShowWindowImpl(long hwnd, boolean shown, int reason);
+
 }

@@ -10,7 +10,9 @@ public final class Msg {
 
 	private static final int WM_KEY_HOOK_EVENT = WM_STOP_HOOKING + 1;
 
-	public static final int WM_USER = WM_KEY_HOOK_EVENT + 1;
+	private static final int CWPR_SHOWWINDOW_EVENT = WM_KEY_HOOK_EVENT + 1;
+
+	public static final int WM_USER = CWPR_SHOWWINDOW_EVENT + 1;
 
 	private Msg() {}
 

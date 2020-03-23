@@ -76,8 +76,9 @@ public final class WinHook {
 		WinAPI.init();
 	}
 
-	public static final int WH_KEYBOARD_LL = 01;
-	public static final int WH_ALL         = 01;
+	public static final int WH_KEYBOARD_LL    = 01;
+	public static final int WH_CALLWNDPROCRET = 02;
+	public static final int WH_ALL            = 03;
 
 	private static final Object THREAD_LOCK = new Object();
 
@@ -86,6 +87,8 @@ public final class WinHook {
 	private static volatile int hookTypes;
 
 	private static volatile int startCount;
+
+	private static CallWndRetProc callWndRetProc;
 
 	private WinHook() {}
 
@@ -176,5 +179,20 @@ public final class WinHook {
 	private static native boolean registerLowLevelHotKeyImpl(long hwnd, int id, int modifiers, short key);
 
 	private static native boolean unregisterLowLevelHotKeyImpl(int modifiers, short key);
+
+	public static CallWndRetProc getCallWndRetProc() {
+		return WinHook.callWndRetProc;
+	}
+
+	public static void setCallWndRetProc(CallWndRetProc callWndRetProc) {
+		WinHook.callWndRetProc = callWndRetProc;
+	}
+
+	private static void dispatchCallWndRetProcShowWindow(long hwnd, int details) {
+		CallWndRetProc proc = WinHook.callWndRetProc;
+		if(proc != null)
+			proc.wmShowWindow(hwnd == 0l ? null : new HWnd(hwnd), (details & 010) != 0,
+					WmShowWindow.ShowWindow.byOrdinal(details & 07));
+	}
 
 }

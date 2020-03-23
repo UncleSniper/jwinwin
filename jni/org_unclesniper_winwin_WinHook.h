@@ -9,8 +9,10 @@ extern "C" {
 #endif
 #undef org_unclesniper_winwin_WinHook_WH_KEYBOARD_LL
 #define org_unclesniper_winwin_WinHook_WH_KEYBOARD_LL 1L
+#undef org_unclesniper_winwin_WinHook_WH_CALLWNDPROCRET
+#define org_unclesniper_winwin_WinHook_WH_CALLWNDPROCRET 2L
 #undef org_unclesniper_winwin_WinHook_WH_ALL
-#define org_unclesniper_winwin_WinHook_WH_ALL 1L
+#define org_unclesniper_winwin_WinHook_WH_ALL 3L
 /*
  * Class:     org_unclesniper_winwin_WinHook
  * Method:    doYaThang

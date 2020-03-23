@@ -138,8 +138,16 @@ extern jmethodID mth_WmEndSession_wmEndSession;
 extern jclass cls_WmHotkey;
 extern jmethodID mth_WmHotkey_wmHotkey;
 
+extern jclass cls_WmShowWindow;
+extern jmethodID mth_WmShowWindow_wmShowWindow;
+extern jclass cls_WmShowWindow_ShowWindow;
+extern jmethodID mth_WmShowWindow_ShowWindow_byOrdinal;
+
 extern jclass cls_WndEnumProc;
 extern jmethodID mth_WndEnumProc_foundWindow;
+
+extern jclass cls_WinHook;
+extern jmethodID mth_WinHook_dispatchCallWndRetProcShowWindow;
 
 HWND getWndHandle(JNIEnv *env, jobject winwrap);
 

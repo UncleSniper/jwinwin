@@ -106,4 +106,9 @@ public class DefaultWndProc implements WndProc {
 		DefWindowProc.wmHotkey(hwnd, id, modifiers, key);
 	}
 
+	@Override
+	public void wmShowWindow(HWnd hwnd, boolean shown, ShowWindow reason) {
+		DefWindowProc.wmShowWindow(hwnd, shown, reason);
+	}
+
 }

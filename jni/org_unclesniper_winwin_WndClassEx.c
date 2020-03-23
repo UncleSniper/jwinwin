@@ -230,6 +230,15 @@ static LRESULT CALLBACK commonWndproc(HWND win, UINT msg, WPARAM wparam, LPARAM 
 			return (LRESULT)0;
 		case WM_UNBLOCK_GETMESSAGE:
 			return (LRESULT)0;
+		case WM_SHOWWINDOW:
+			_wrapwin(0)
+			shuntobj = (*env)->CallStaticObjectMethod(env, cls_WmShowWindow_ShowWindow,
+					mth_WmShowWindow_ShowWindow_byOrdinal, (jint)lparam);
+			if((*env)->ExceptionCheck(env) == JNI_FALSE)
+				(*env)->CallVoidMethod(env, cbobj, mth_WmShowWindow_wmShowWindow, winwrap,
+						wparam ? JNI_TRUE : JNI_FALSE, shuntobj);
+			_done
+			return (LRESULT)0;
 		default:
 			_done
 			return DefWindowProc(win, msg, wparam, lparam);

@@ -137,8 +137,16 @@ jmethodID mth_WmEndSession_wmEndSession;
 jclass cls_WmHotkey;
 jmethodID mth_WmHotkey_wmHotkey;
 
+jclass cls_WmShowWindow;
+jmethodID mth_WmShowWindow_wmShowWindow;
+jclass cls_WmShowWindow_ShowWindow;
+jmethodID mth_WmShowWindow_ShowWindow_byOrdinal;
+
 jclass cls_WndEnumProc;
 jmethodID mth_WndEnumProc_foundWindow;
+
+jclass cls_WinHook;
+jmethodID mth_WinHook_dispatchCallWndRetProcShowWindow;
 
 #define BEGIN_BIND_CLASS(vname, qname) \
 	cls_ ## vname = (*env)->FindClass(env, qname); \
@@ -298,14 +306,22 @@ JNIEXPORT void JNICALL Java_org_unclesniper_winwin_WinAPI_initNative(JNIEnv *env
 	BIND_UCLASS(WmHotkey)
 		BIND_IMETHOD(WmHotkey, wmHotkey, "(Lorg/unclesniper/winwin/HWnd;IILorg/unclesniper/winwin/VirtualKey;)V")
 	END_BIND_CLASS(WmHotkey)
+	BIND_UCLASS(WmShowWindow)
+		BIND_IMETHOD(WmShowWindow, wmShowWindow, "(Lorg/unclesniper/winwin/HWnd;"
+				"ZLorg/unclesniper/winwin/WmShowWindow$ShowWindow;)V")
+	END_BIND_CLASS(WmShowWindow)
+	BIND_UNCLASS(WmShowWindow, ShowWindow)
+		BIND_SMETHOD(WmShowWindow_ShowWindow, byOrdinal, "(I)Lorg/unclesniper/winwin/WmShowWindow$ShowWindow;")
+	END_BIND_CLASS(WmShowWindow_ShowWindow)
 	BIND_UCLASS(WndEnumProc)
 		BIND_IMETHOD(WndEnumProc, foundWindow, "(Lorg/unclesniper/winwin/HWnd;)Z")
 	END_BIND_CLASS(WndEnumProc)
+	BIND_UCLASS(WinHook)
+		BIND_SMETHOD(WinHook, dispatchCallWndRetProcShowWindow, "(JI)V")
+	END_BIND_CLASS(WinHook)
 	(*env)->GetJavaVM(env, &theJVM);
 	theHeap = GetProcessHeap();
-	/*
 	zeroLLHotkeyTable();
-	*/
 }
 
 JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_WinAPI_getLastError(JNIEnv *env, jclass clazz) {

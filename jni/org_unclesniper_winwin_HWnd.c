@@ -269,3 +269,17 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_isWindowVisible(JNIE
 		return JNI_FALSE;
 	return IsWindowVisible(hwnd) ? JNI_TRUE : JNI_FALSE;
 }
+
+JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_isIconic(JNIEnv *env, jobject winwrap) {
+	HWND hwnd = getWndHandle(env, winwrap);
+	if(!hwnd)
+		return JNI_FALSE;
+	return IsIconic(hwnd) ? JNI_TRUE : JNI_FALSE;
+}
+
+JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_isZoomed(JNIEnv *env, jobject winwrap) {
+	HWND hwnd = getWndHandle(env, winwrap);
+	if(!hwnd)
+		return JNI_FALSE;
+	return IsZoomed(hwnd) ? JNI_TRUE : JNI_FALSE;
+}

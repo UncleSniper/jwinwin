@@ -4,6 +4,7 @@
 
 #define WM_STOP_HOOKING ((UINT)org_unclesniper_winwin_Msg_WM_STOP_HOOKING)
 #define WM_KEY_HOOK_EVENT ((UINT)org_unclesniper_winwin_Msg_WM_KEY_HOOK_EVENT)
+#define CWPR_SHOWWINDOW_EVENT ((UINT)org_unclesniper_winwin_Msg_CWPR_SHOWWINDOW_EVENT)
 
 static ATOM hookClassAtom = (ATOM)0;
 static HWND hookRelayWindow = NULL;
@@ -70,37 +71,49 @@ static LRESULT CALLBACK hookWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 	UINT modifiers, vk;
 	unsigned index, down;
 	volatile llhotkey_t *hotkey;
-	if(hwnd != hookRelayWindow || uMsg != WM_KEY_HOOK_EVENT)
+	JNIEnv *env;
+	if(hwnd != hookRelayWindow)
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
-	modifiers = (UINT)(wParam >> 8);
-	modifiers &= (UINT)UMODST_MASK;
-	vk = (UINT)(wParam & (WPARAM)0xFF);
-	down = !!(lParam & (LPARAM)0x100);
-	index = (unsigned)vk * 16u + (unsigned)modifiers;
-	hotkey = llhotkeys + index;
-	lParam = (LPARAM)modifiers;
-	if(down)
-		lParam |= (LPARAM)vk << 16;
-	switch(hotkey->kind) {
-		case LLHK_WINDOW:
-			PostMessageW(hotkey->windowID, WM_HOTKEY, (WPARAM)hotkey->hotkeyID, lParam);
-			break;
-		case LLHK_THREAD:
-			PostThreadMessageW(hotkey->threadID, WM_HOTKEY, (WPARAM)hotkey->hotkeyID, lParam);
-			break;
+	switch(uMsg) {
+		case WM_KEY_HOOK_EVENT:
+			modifiers = (UINT)(wParam >> 8);
+			modifiers &= (UINT)UMODST_MASK;
+			vk = (UINT)(wParam & (WPARAM)0xFF);
+			down = !!(lParam & (LPARAM)0x100);
+			index = (unsigned)vk * 16u + (unsigned)modifiers;
+			hotkey = llhotkeys + index;
+			lParam = (LPARAM)modifiers;
+			if(down)
+				lParam |= (LPARAM)vk << 16;
+			switch(hotkey->kind) {
+				case LLHK_WINDOW:
+					PostMessageW(hotkey->windowID, WM_HOTKEY, (WPARAM)hotkey->hotkeyID, lParam);
+					break;
+				case LLHK_THREAD:
+					PostThreadMessageW(hotkey->threadID, WM_HOTKEY, (WPARAM)hotkey->hotkeyID, lParam);
+					break;
+				default:
+					return (LRESULT)0;
+			}
+			if(down) {
+				hotkey->flags |= LLHK_FL_DOWN;
+				doSwallowHotkeyFixup(modifiers, vk);
+			}
+			else {
+				if(!(hotkey->flags & LLHK_FL_DOWN))
+					return (LRESULT)0;
+				hotkey->flags &= ~LLHK_FL_DOWN;
+			}
+			return (LRESULT)1;
+		case CWPR_SHOWWINDOW_EVENT:
+			if((*theJVM)->GetEnv(theJVM, (void**)&env, JNI_VERSION_1_8) != JNI_OK)
+				return (LRESULT)0;
+			(*env)->CallStaticVoidMethod(env, cls_WinHook, mth_WinHook_dispatchCallWndRetProcShowWindow,
+					(jlong)lParam, (jint)wParam);
+			return (LRESULT)0;
 		default:
-			return (LRESULT)0;
+			return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
-	if(down) {
-		hotkey->flags |= LLHK_FL_DOWN;
-		doSwallowHotkeyFixup(modifiers, vk);
-	}
-	else {
-		if(!(hotkey->flags & LLHK_FL_DOWN))
-			return (LRESULT)0;
-		hotkey->flags &= ~LLHK_FL_DOWN;
-	}
-	return (LRESULT)1;
 }
 
 #define MODST_LALT   0001
@@ -195,12 +208,28 @@ LRESULT CALLBACK keyboardLLHook(int nCode, WPARAM wParam, LPARAM lParam) {
 	return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
+LRESULT CALLBACK callWndRetProcHook(int nCode, WPARAM wParam, LPARAM lParam) {
+	const CWPRETSTRUCT *info;
+	if(!nCode && hookRelayWindow) {
+		info = (const CWPRETSTRUCT*)lParam;
+		switch(info->message) {
+			case WM_SHOWWINDOW:
+				wParam = (WPARAM)(info->lParam & (LPARAM)07);
+				if(info->wParam)
+					wParam |= (WPARAM)010;
+				PostMessageW(hookRelayWindow, CWPR_SHOWWINDOW_EVENT, wParam, (LPARAM)info->hwnd);
+				break;
+		}
+	}
+	return CallNextHookEx(NULL, nCode, wParam, lParam);
+}
+
 JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_WinHook_doYaThang(JNIEnv *env, jclass clazz, jint types) {
 	static int dummy;
 	MEMORY_BASIC_INFORMATION mbi;
 	HINSTANCE instance;
 	WNDCLASSEX clinfo;
-	HHOOK llkbHook;
+	HHOOK llkbHook, cwprHook;
 	MSG msg;
 	if(!VirtualQuery(&dummy, &mbi, (SIZE_T)sizeof(mbi))) {
 		setRelayedLastError(env, 0);
@@ -236,6 +265,17 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_WinHook_doYaThang(JNIEnv 
 	}
 	else
 		llkbHook = NULL;
+	if(types & org_unclesniper_winwin_WinHook_WH_CALLWNDPROCRET) {
+		cwprHook = SetWindowsHookEx(WH_CALLWNDPROCRET, callWndRetProcHook, instance, (DWORD)0u);
+		if(!cwprHook) {
+			setRelayedLastError(env, 0);
+			if(llkbHook)
+				UnhookWindowsHookEx(llkbHook);
+			return JNI_FALSE;
+		}
+	}
+	else
+		cwprHook = NULL;
 	while(GetMessage(&msg, NULL, (UINT)0u, (UINT)0u)) {
 		if(msg.message == WM_STOP_HOOKING && msg.hwnd == hookRelayWindow)
 			break;
@@ -243,6 +283,12 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_WinHook_doYaThang(JNIEnv 
 		DispatchMessage(&msg);
 	}
 	if(llkbHook && !UnhookWindowsHookEx(llkbHook)) {
+		setRelayedLastError(env, 0);
+		if(cwprHook)
+			UnhookWindowsHookEx(cwprHook);
+		return JNI_FALSE;
+	}
+	if(cwprHook && !UnhookWindowsHookEx(cwprHook)) {
 		setRelayedLastError(env, 0);
 		return JNI_FALSE;
 	}
