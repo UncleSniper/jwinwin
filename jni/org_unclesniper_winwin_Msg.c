@@ -1,3 +1,4 @@
+#include "winmac.h"
 #include "global.h"
 
 static int doHotkey(JNIEnv *env, const MSG *msg) {

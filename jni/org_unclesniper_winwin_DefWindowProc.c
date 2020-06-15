@@ -1,3 +1,4 @@
+#include "winmac.h"
 #include "stringutils.h"
 
 #define BEGIN_VMESSAGE(mname) \

@@ -1,3 +1,4 @@
+#include "winmac.h"
 #include <limits.h>
 
 #include "stringutils.h"
@@ -282,4 +283,20 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_isZoomed(JNIEnv *env
 	if(!hwnd)
 		return JNI_FALSE;
 	return IsZoomed(hwnd) ? JNI_TRUE : JNI_FALSE;
+}
+
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_getWindowThreadId(JNIEnv *env, jobject winwrap) {
+	HWND hwnd = getWndHandle(env, winwrap);
+	if(!hwnd)
+		return (jlong)0;
+	return (jlong)GetWindowThreadProcessId(hwnd, NULL);
+}
+
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_getWindowProcessId(JNIEnv *env, jobject winwrap) {
+	HWND hwnd = getWndHandle(env, winwrap);
+	DWORD pid;
+	if(!hwnd)
+		return (jlong)0;
+	GetWindowThreadProcessId(hwnd, &pid);
+	return (jlong)pid;
 }

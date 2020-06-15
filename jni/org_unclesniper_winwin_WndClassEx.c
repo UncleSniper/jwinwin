@@ -1,3 +1,4 @@
+#include "winmac.h"
 #include <limits.h>
 #include <shlwapi.h>
 

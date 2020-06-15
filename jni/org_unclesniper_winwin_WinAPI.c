@@ -1,6 +1,8 @@
-#include <jni.h>
+#include "winmac.h"
+#include <psapi.h>
 #include <string.h>
-#include <windows.h>
+
+#include "stringutils.h"
 
 void zeroLLHotkeyTable();
 
@@ -350,4 +352,27 @@ JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_WinAPI_getCurrentThreadId(JN
 
 JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_WinAPI_getCurrentProcessId(JNIEnv *env, jclass clazz) {
 	return (jlong)GetCurrentProcessId();
+}
+
+JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_WinAPI__1WIN32_1WINNT(JNIEnv *env, jclass clazz) {
+	return (jint)_WIN32_WINNT;
+}
+
+JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_WinAPI_getProcessImageFileNameImpl(JNIEnv *env,
+		jclass clazz, jlong pid) {
+	HANDLE phnd;
+	DWORD length;
+	/*TODO*/
+	phnd = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, (DWORD)pid);
+	if(!phnd) {
+		setRelayedLastError(env, 0);
+		return NULL;
+	}
+	return NULL;
+}
+
+JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_WinAPI_queryFullProcessImageNameImpl(JNIEnv *env,
+		jclass clazz, jlong pid, jint flags) {
+	/*TODO*/
+	return NULL;
 }

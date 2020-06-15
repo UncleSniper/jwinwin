@@ -1,3 +1,4 @@
+#include "winmac.h"
 #include "global.h"
 #include "org_unclesniper_winwin_Msg.h"
 #include "org_unclesniper_winwin_HWinEventHook.h"

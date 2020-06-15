@@ -1,3 +1,4 @@
+#include "winmac.h"
 #include "global.h"
 
 JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_Hotkey_registerHotKeyImpl(JNIEnv *env, jclass clazz,

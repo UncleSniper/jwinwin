@@ -61,6 +61,8 @@ public class WinAPI {
 	public static final int ERROR_HOTKEY_ALREADY_REGISTERED = 0x581;
 	public static final int ERROR_HOTKEY_NOT_REGISTERED = 0x58B;
 
+	public static final int PROCESS_NAME_NATIVE = 0x00000001;
+
 	private static final String DLL_NAME = "jwinwin";
 
 	private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
@@ -152,5 +154,25 @@ public class WinAPI {
 	public static native long getCurrentThreadId();
 
 	public static native long getCurrentProcessId();
+
+	public static native int _WIN32_WINNT();
+
+	public static String getProcessImageFileName(long processID) {
+		String name = WinAPI.getProcessImageFileNameImpl(processID);
+		if(name != null)
+			return name;
+		throw new WindowsException("Failed to retrieve process image file name");
+	}
+
+	private static native String getProcessImageFileNameImpl(long processID);
+
+	public static String queryFullProcessImageName(long processID, int flags) {
+		String name = WinAPI.queryFullProcessImageNameImpl(processID, flags);
+		if(name != null)
+			return name;
+		throw new WindowsException("Failed to retrieve process image file name");
+	}
+
+	private static native String queryFullProcessImageNameImpl(long processID, int flags);
 
 }

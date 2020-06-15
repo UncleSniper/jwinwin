@@ -1,3 +1,4 @@
+#include "winmac.h"
 #include <string.h>
 
 #include "global.h"
@@ -23,4 +24,8 @@ WCHAR *jstringToLPWSTR(JNIEnv *env, jstring str) {
 
 jstring lpcwstrToJString(JNIEnv *env, LPCWSTR chars) {
 	return (*env)->NewString(env, (const jchar*)chars, (jsize)wcslen(chars));
+}
+
+jstring lpcwstrToJStringByLength(JNIEnv *env, LPCWSTR chars, jsize length) {
+	return (*env)->NewString(env, (const jchar*)chars, length);
 }

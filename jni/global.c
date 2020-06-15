@@ -1,3 +1,4 @@
+#include "winmac.h"
 #include "global.h"
 
 HWND getWndHandle(JNIEnv *env, jobject winwrap) {

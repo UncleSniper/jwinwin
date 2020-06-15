@@ -177,6 +177,22 @@ JNIEXPORT jboolean JNICALL Java_org_unclesniper_winwin_HWnd_isZoomed
 
 /*
  * Class:     org_unclesniper_winwin_HWnd
+ * Method:    getWindowThreadId
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_getWindowThreadId
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_HWnd
+ * Method:    getWindowProcessId
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_HWnd_getWindowProcessId
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_unclesniper_winwin_HWnd
  * Method:    createWindowExByClassAtom
  * Signature: (IILjava/lang/String;IIIIIJJ)J
  */

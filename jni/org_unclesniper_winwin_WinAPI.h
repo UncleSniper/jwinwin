@@ -83,6 +83,8 @@ extern "C" {
 #define org_unclesniper_winwin_WinAPI_ERROR_HOTKEY_ALREADY_REGISTERED 1409L
 #undef org_unclesniper_winwin_WinAPI_ERROR_HOTKEY_NOT_REGISTERED
 #define org_unclesniper_winwin_WinAPI_ERROR_HOTKEY_NOT_REGISTERED 1419L
+#undef org_unclesniper_winwin_WinAPI_PROCESS_NAME_NATIVE
+#define org_unclesniper_winwin_WinAPI_PROCESS_NAME_NATIVE 1L
 /*
  * Class:     org_unclesniper_winwin_WinAPI
  * Method:    initNative
@@ -122,6 +124,30 @@ JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_WinAPI_getCurrentThreadId
  */
 JNIEXPORT jlong JNICALL Java_org_unclesniper_winwin_WinAPI_getCurrentProcessId
   (JNIEnv *, jclass);
+
+/*
+ * Class:     org_unclesniper_winwin_WinAPI
+ * Method:    _WIN32_WINNT
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_unclesniper_winwin_WinAPI__1WIN32_1WINNT
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_unclesniper_winwin_WinAPI
+ * Method:    getProcessImageFileNameImpl
+ * Signature: (J)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_WinAPI_getProcessImageFileNameImpl
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     org_unclesniper_winwin_WinAPI
+ * Method:    queryFullProcessImageNameImpl
+ * Signature: (JI)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_unclesniper_winwin_WinAPI_queryFullProcessImageNameImpl
+  (JNIEnv *, jclass, jlong, jint);
 
 #ifdef __cplusplus
 }

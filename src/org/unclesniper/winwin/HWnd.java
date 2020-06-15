@@ -172,6 +172,10 @@ public final class HWnd {
 
 	public native boolean isZoomed();
 
+	public native long getWindowThreadId();
+
+	public native long getWindowProcessId();
+
 	public static HWnd createWindowEx(int dwExStyle, ClassAtom lpClassName, String lpWindowName,
 			int dwStyle, int x, int y, int nWidth, int nHeight, HWnd hWndParent, HMenu hMenu) {
 		long handle = HWnd.createWindowExByClassAtom(dwExStyle, lpClassName.getAtom(), lpWindowName,
